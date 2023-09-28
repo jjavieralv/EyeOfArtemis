@@ -1,0 +1,53 @@
+## Docker Compose setting
+image:
+  name: ghcr.io/blakeblackshear/frigate
+  version: "stable"
+privileged: 'true'
+restart: 'unless-stopped'
+container_name: frigate_tst
+
+## Environment
+#Add all environment values you want to use in container
+environment_values:
+  FRIGATE_RTSP_PASSWORD: "password"
+
+
+## Network
+ports:
+  - "5000:5000"
+  - "8554:8554" # RTSP feeds
+  - "8555:8555/tcp" # WebRTC over tcp
+  - "8555:8555/udp" # WebRTC over udp
+
+## Media
+
+frigate_main:
+  path: "{{dockercompose.path}}/frigate"
+
+docker_compose:
+  project:
+    path: "{{frigate_main.path}}/docker-compose"
+
+main_paths:
+    media:
+      path: "{{frigate_main.path}}/media"
+    config:
+      path: "{{frigate_main.path}}/config"
+      filename: "config.yml" 
+    database:
+      path: "{{frigate_main.path}}/db/"
+      filename: "databases.db"
+    cache:
+      type: tmpfs
+      target: '/tmp/frigate_cache'
+      size: 1000000000
+
+media_subpaths:
+  clips:
+    path: "{{main_paths.media.path}}/clips"
+  recordings:
+    path: "{{main_paths.media.path}}/recordings"
+
+  
+
+  

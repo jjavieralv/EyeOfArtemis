@@ -1,0 +1,9 @@
+---
+
+- shell: |
+    whoami; docker run hello-world
+  register: perrete
+  ignore_errors: true
+
+- debug:
+    var: perrete

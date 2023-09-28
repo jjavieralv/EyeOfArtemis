@@ -1,0 +1,16 @@
+---
+## Management Users and Groups
+
+- name: Users and Groups management
+  include_tasks: users_groups.yml
+  tags:
+    - groups
+    - users
+    - config_sudoers
+
+- name: "Configure ssh access"
+  include_tasks: ssh.yml
+  tags: 
+    - ssh_copy
+    - ssh_config
+    

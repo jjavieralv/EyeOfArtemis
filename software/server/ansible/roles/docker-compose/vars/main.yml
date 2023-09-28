@@ -1,0 +1,5 @@
+---
+dockercompose_user: docker-compose
+
+dockercompose:
+  path: "/home/{{ dockercompose_user }}"

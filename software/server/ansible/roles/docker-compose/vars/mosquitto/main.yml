@@ -1,0 +1,23 @@
+## Docker compose settings
+image:
+  name: docker.io/eclipse-mosquitto
+  version: 2.0.15
+container_name: broker_test
+restart: unless-stopped
+
+configs:
+  mosquitto_users: /mosquitto_users
+  mosquitto_config: /mosquitto_config
+
+entrypoint: 'mosquitto -c {{configs.mosquitto_config}}'
+
+mosquitto_main:
+  path: "{{dockercompose.path}}/mosquitto"
+
+main_paths:
+  config:
+    path: "{{ mosquitto_main.path }}/config"
+
+docker_compose:
+  project:
+    path: "{{mosquitto_main.path}}/docker-compose"

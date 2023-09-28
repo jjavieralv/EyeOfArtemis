@@ -1,0 +1,32 @@
+---
+- include_vars: vars/ssh.yml
+  tags: always
+
+- name: Upload authorized key
+  authorized_key:
+    user: "{{ssh_user}}"
+    key: "{{ lookup('file','../files/' + ssh_user + '.pub') }}"
+    state: present
+  tags: ssh_copy
+
+- name: Disable root login
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: '^.?PermitRootLogin'
+    line: "PermitRootLogin no"
+    state: present
+    backup: yes
+  tags: ssh_config
+  notify:
+    - restart ssh
+
+- name: Enable PubkeyAuthentication
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: '#PubkeyAuthentication'
+    line: "PubkeyAuthentication yes"
+    state: present
+    backup: yes
+  tags: ssh_config
+  notify:
+    - restart ssh

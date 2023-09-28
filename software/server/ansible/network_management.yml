@@ -1,0 +1,10 @@
+---
+- name: Config server
+  hosts: all
+  gather_facts: false
+
+  roles: 
+    - role: network-management
+      vars: 
+        - ansible_become: true
+        - ansible_user: jjavieralv

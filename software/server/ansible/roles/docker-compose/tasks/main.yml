@@ -1,0 +1,33 @@
+---
+- include_vars: vars/main.yml
+  tags: always
+
+- name: Manage docker-compose
+  include_tasks: dockercompose/main.yml
+  tags:
+    - docker-compose
+
+- name: Manage mosquitto
+  include_tasks: mosquitto/mosquitto.yml
+  args:
+    apply:
+      become_user: "{{dockercompose_user}}"
+      become: true
+  tags:
+    - mosquitto
+    
+- name: Manage frigate
+  include_tasks: frigate/main.yml
+  args:
+    apply:
+      become_user: "{{dockercompose_user}}"
+      become: true
+  tags:
+    - frigate
+
+- name: hello world docker
+  import_tasks: hello.yml
+  become_user: "{{dockercompose_user}}"
+  become: true
+  tags:
+    - hello

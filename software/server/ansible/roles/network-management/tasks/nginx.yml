@@ -1,0 +1,37 @@
+---
+
+- include_vars: vars/nginx.yml
+  tags: always
+
+- name: Install NGINX
+  block:
+    - name: Add epel-release repo
+      yum:
+        name: epel-release
+        state: present
+
+    - name: "Install Specific Nginx version {{ nginx.version }}"
+      yum:
+        name: nginx{{ nginx.version }}
+        state: present
+      when: nginx.version != 'latest'
+
+    - name: "Install Nginx version latest"
+      yum:
+        name: nginx
+        state: latest
+      when: nginx.version == 'latest'
+    
+    - name: Enable nginx service
+      service:
+        name: nginx
+        enabled: yes
+
+  notify:
+    - restart nginx
+  tags: nginx_install
+
+
+
+
+
