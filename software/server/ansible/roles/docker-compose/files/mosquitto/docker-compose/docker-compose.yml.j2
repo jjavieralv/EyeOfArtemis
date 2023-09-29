@@ -1,0 +1,26 @@
+services:
+  mosquitto:
+    image: {{ image.name }}:{{ image.version }}
+    restart: {{restart}}
+    container_name: {{ container_name}}
+    {% if configs is defined -%}
+    configs:
+      {% for conf in configs -%}
+      - {{ conf }}
+      {% endfor %}
+    {%- endif %}
+
+    {% if entrypoint is defined -%}
+    entrypoint: {{entrypoint}}
+    {% endif %}
+
+    ports:
+      - {{mosquitto.listener}}:{{mosquitto.listener}}
+
+{% if configs is defined %}
+configs:
+{% for conf in configs %}
+  {{ conf }}:
+    file: ../config{{ configs[conf] }}
+{% endfor %}
+{% endif %}

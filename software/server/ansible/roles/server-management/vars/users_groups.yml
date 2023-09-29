@@ -1,0 +1,31 @@
+---
+# vars file for server-management
+
+groups_list:
+  - name: management
+    gid: 9801
+  - name: docker
+    gid: 9802
+
+users_list:
+  - name: docker-compose
+    uid: 9901
+    group: management
+    groups: management, docker
+    comment: "Docker compose runtime"
+    ## optional
+    password_lock: true
+    shell: /sbin/nologin
+    create_home: true
+    append: true
+    
+  - name: ansible
+    uid: 9902
+    group: management
+    groups: management, wheel
+    comment: "Docker compose runtime"
+    ## optional
+    password_lock: true
+    shell: /bin/bash
+    create_home: true
+    append: true

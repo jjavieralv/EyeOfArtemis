@@ -1,0 +1,73 @@
+---
+- include_vars:
+    dir: frigate
+    extensions: 
+      - yml
+  tags: always
+
+- name: Config frigate
+  block:
+    - name: Create frigate dirs
+      file: 
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ dockercompose_user }}"
+      with_items: 
+        - "{{main_paths.media.path}}"
+        - "{{main_paths.database.path}}"
+        - "{{main_paths.config.path}}"
+        - "{{docker_compose.project.path}}"
+
+    - name: Copy frigate docker_compose template 
+      template:
+        src: files/frigate/docker-compose/docker-compose.yml.j2
+        dest: "{{frigate_main.path}}/docker-compose/docker-compose.yml"
+        
+    - name: Import Mosquitto users
+      include_vars:
+        dir: mosquitto
+        name: app-config.yml
+
+    - name: Copy frigate config config
+      template:
+        src: "files/frigate/configs/{{item | basename}}"
+        dest: "{{ main_paths.config.path}}/{{item | basename | splitext | first}}"
+      with_fileglob: "frigate/configs/*"
+  tags: config
+
+- name: Delete frigate
+  block:
+    - name: Docker compose frigate down
+      debug: 
+        msg: "Down frigate..."
+      changed_when: true
+      notify: 'compose down'
+
+    - meta: flush_handlers
+  
+    - name: Delete configs
+      file:
+        path: "{{ item }}"
+        state: absent
+      with_items: 
+        - "{{frigate_main.path}}"
+
+  tags: delete
+
+##################
+# Manage Frigate #
+##################
+
+- name: Docker compose frigate up
+  debug: 
+    msg: "Up frigate..."
+  changed_when: true
+  notify: compose up
+  tags: up
+
+- name: Docker compose frigate down
+  debug: 
+    msg: "Down frigate..."
+  changed_when: true
+  notify: 'compose down'
+  tags: down

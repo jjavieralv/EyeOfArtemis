@@ -1,0 +1,16 @@
+# MQTT Port Listener
+listener    {{mosquitto.listener}}
+protocol    {{mosquitto.protocol}}
+
+# Authentication
+allow_anonymous     false
+password_file       {{configs.mosquitto_users}}
+
+#persistence true
+#autosave_interval 60
+#persistence_file /mosquitto/data/persistence.db
+#persistent_client_expiration 1d
+#
+#log_type information
+#log_timestamp true
+#log_dest file /mosquitto/log/mosquitto.log

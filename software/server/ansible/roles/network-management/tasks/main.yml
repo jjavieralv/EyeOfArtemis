@@ -1,0 +1,5 @@
+---
+- name: Nginx management
+  include_tasks: nginx.yml
+  tags:
+    - nginx_install

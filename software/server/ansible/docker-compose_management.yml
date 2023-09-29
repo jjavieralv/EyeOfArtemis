@@ -1,0 +1,7 @@
+---
+- name: Config server
+  hosts: all
+  gather_facts: true
+
+  roles: 
+    - role: docker-compose

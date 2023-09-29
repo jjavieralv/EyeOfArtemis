@@ -1,0 +1,67 @@
+---
+- include_vars:
+    dir: mosquitto
+    extensions: 
+      - yml
+  tags: always
+
+- name: Config mosquitto
+  block:
+    - name: Create mosquitto dirs
+      file: 
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ dockercompose_user }}"
+      with_items: 
+        - "{{main_paths.config.path}}"
+        - "{{mosquitto_main.path}}/docker-compose"
+
+    - name: Copy mosquitto docker_compose template
+      template:
+        src: files/mosquitto/docker-compose/docker-compose.yml.j2
+        dest: "{{mosquitto_main.path}}/docker-compose/docker-compose.yml"
+
+    - name: Copy mosquitto config template
+      template:
+        src: "files/mosquitto/configs/{{ item | basename }}"
+        dest: "{{ main_paths.config.path}}/{{ item | basename | splitext | first}}"
+      with_fileglob: 'mosquitto/configs/*'
+  tags: config
+
+- name: Delete Mosquitto
+  block:
+
+    - name: Docker compose mosquitto down
+      debug: 
+        msg: "Down mosquitto..."
+      changed_when: true
+      notify: 'compose down'
+
+    - meta: flush_handlers
+  
+    - name: Delete configs
+      file:
+        path: "{{ item }}"
+        state: absent
+      with_items: 
+        - "{{mosquitto_main.path}}"
+
+  tags: delete
+####################
+# Manage Mosquitto #
+####################
+
+
+- name: Docker compose mosquitto up
+  debug: 
+    msg: "Up mosquitto..."
+  changed_when: true
+  notify: compose up
+  tags: up
+
+- name: Docker compose mosquitto down
+  debug: 
+    msg: "Down mosquitto..."
+  changed_when: true
+  notify: 'compose down'
+  tags: down

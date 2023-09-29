@@ -1,0 +1,14 @@
+---
+- name: compose up
+  become_user: "{{dockercompose_user}}"
+  become: true
+  shell:
+    cmd: "docker compose up --detach"
+    chdir: "{{ docker_compose.project.path }}"
+
+- name: compose down
+  become_user: "{{dockercompose_user}}"
+  become: true
+  shell:
+    cmd: "docker compose down"
+    chdir: "{{ docker_compose.project.path }}"

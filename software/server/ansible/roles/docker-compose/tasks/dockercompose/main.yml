@@ -1,0 +1,7 @@
+---
+
+- name: Install aplication
+  include_tasks: install.yml
+  tags:
+    - prepare-system
+    - install
