@@ -1,7 +1,7 @@
 mqtt:
-  host: 172.21.0.2
+  host: 192.168.1.162
   user: frigate
-  password: toor
+  password: perrete_frigate
   topic_prefix: frigate
 detectors:
   cpu1:
@@ -29,9 +29,9 @@ cameras:
       enabled: false
     motion:
       mask:
-        - 1245,23,1280,720,97,720,66,0
+        - 725,0,760,720,26,720,0,0
     objects:
       filters:
         person:
           mask:
-            - 1245,23,1280,720,97,720,66,0
+            - 725,0,760,720,26,720,0,0

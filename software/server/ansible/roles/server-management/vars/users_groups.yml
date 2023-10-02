@@ -23,7 +23,7 @@ users_list:
     uid: 9902
     group: management
     groups: management, wheel
-    comment: "Docker compose runtime"
+    comment: "Ansible management"
     ## optional
     password_lock: true
     shell: /bin/bash
