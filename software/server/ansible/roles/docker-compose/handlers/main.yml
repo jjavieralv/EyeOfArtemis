@@ -12,3 +12,10 @@
   shell:
     cmd: "docker compose down"
     chdir: "{{ docker_compose.project.path }}"
+
+- name: compose restart
+  become_user: "{{dockercompose_user}}"
+  become: true
+  shell:
+    cmd: "docker compose restart"
+    chdir: "{{ docker_compose.project.path }}"

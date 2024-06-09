@@ -1,10 +1,20 @@
 ---
-- name: Config server
+- name: server-management
   hosts: all
   gather_facts: false
 
-  roles: 
-    - role: server-management
-      vars: 
-        - ansible_become: true
-        - ansible_user: jjavieralv
+  tasks:
+  - name: Initial config
+    include_role:
+      name: server-management
+      apply:
+        vars:
+          - ansible_become: true
+          - ansible_user: eyeofartemis
+    tags: first-execution
+
+  - name: Initial config
+    include_role:
+      name: server-management
+    when: "'first-execution' not in ansible_run_tags"
+    tags: always

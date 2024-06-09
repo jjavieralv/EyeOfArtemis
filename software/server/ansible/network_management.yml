@@ -7,4 +7,4 @@
     - role: network-management
       vars: 
         - ansible_become: true
-        - ansible_user: jjavieralv
+        - ansible_user: eyeofartemis

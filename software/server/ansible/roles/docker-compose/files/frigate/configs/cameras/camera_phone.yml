@@ -1,0 +1,38 @@
+camera_phone:
+  ffmpeg:
+    inputs:
+    - path: rtsp://192.168.1.136:8080/h264_opus.sdp
+      #- path: rtsp://192.168.1.166/mpeg4/media.amp
+      roles:
+      - detect
+          #- record
+            #      input_args: -avoid_negative_ts make_zero -fflags nobuffer -flags low_delay -strict experimental -fflags +genpts+discardcorrupt -use_wallclock_as_timestamps 1 -c:v mjpeg
+            #      output_args:
+            #record: -f segment -segment_time 10 -segment_format mp4 -reset_timestamps 1 -strftime 1 -c:v libx264 -an
+      #rtmp: -c:v libx264 -an -f flv
+  rtmp:
+    enabled: false
+  detect:
+    width: 1920
+    height: 1080
+    fps: 1
+  #motion:
+  #  mask:
+  #  - 1920,0,1920,1080,0,1080,0,0
+  objects:
+    track:
+      - person
+    filters:
+      person:
+        threshold: 0.5
+        min_area: 500
+        max_area: 100000
+  snapshots:
+    enabled: True
+  mqtt:
+      # Optional: Enable publishing snapshot via mqtt for camera (default: shown below)
+      # NOTE: Only applies to publishing image data to MQTT via 'frigate/<camera_name>/<object_name>/snapshot'.
+      # All other messages will still be published.
+      enabled: True
+      # Optional: print a timestamp on the snapshots (default: shown below)
+      timestamp: True

@@ -1,6 +1,11 @@
 ---
 ## Management Users and Groups
 
+- name: check if this is first execution
+  debug:
+    msg: "This is first execution"
+  tags: first-execution
+  
 - name: Users and Groups management
   include_tasks: users_groups.yml
   tags:

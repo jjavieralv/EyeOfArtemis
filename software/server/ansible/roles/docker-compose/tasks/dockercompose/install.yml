@@ -30,7 +30,7 @@
         name: python-pip
         update_cache: yes 
         state: present
-
+  become: true
   tags: prepare-system
 
 - name: install docker
@@ -72,6 +72,7 @@
         state: started
         enabled: yes
         name: docker
+  become: true
   tags: install
 
 

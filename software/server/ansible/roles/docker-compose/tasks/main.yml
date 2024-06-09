@@ -8,7 +8,7 @@
     - docker-compose
 
 - name: Manage mosquitto
-  include_tasks: mosquitto/mosquitto.yml
+  include_tasks: mosquitto/main.yml
   args:
     apply:
       become_user: "{{dockercompose_user}}"

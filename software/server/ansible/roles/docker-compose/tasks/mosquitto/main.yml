@@ -5,6 +5,26 @@
       - yml
   tags: always
 
+- name: Delete Mosquitto
+  block:
+
+    - name: Docker compose mosquitto down
+      debug: 
+        msg: "Down mosquitto..."
+      changed_when: true
+      notify: 'compose down'
+
+    - meta: flush_handlers
+  
+    - name: Delete configs
+      file:
+        path: "{{ item }}"
+        state: absent
+      with_items: 
+        - "{{mosquitto_main.path}}"
+
+  tags: delete
+  
 - name: Config mosquitto
   block:
     - name: Create mosquitto dirs
@@ -28,25 +48,7 @@
       with_fileglob: 'mosquitto/configs/*'
   tags: config
 
-- name: Delete Mosquitto
-  block:
 
-    - name: Docker compose mosquitto down
-      debug: 
-        msg: "Down mosquitto..."
-      changed_when: true
-      notify: 'compose down'
-
-    - meta: flush_handlers
-  
-    - name: Delete configs
-      file:
-        path: "{{ item }}"
-        state: absent
-      with_items: 
-        - "{{mosquitto_main.path}}"
-
-  tags: delete
 ####################
 # Manage Mosquitto #
 ####################
@@ -65,3 +67,10 @@
   changed_when: true
   notify: 'compose down'
   tags: down
+
+- name: Docker compose mosquitto restart
+  debug: 
+    msg: "restart mosquitto..."
+  changed_when: true
+  notify: 'compose restart'
+  tags: restart

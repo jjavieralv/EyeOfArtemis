@@ -16,9 +16,9 @@
     line: "PermitRootLogin no"
     state: present
     backup: yes
-  tags: ssh_config
   notify:
     - restart ssh
+  tags: ssh_config
 
 - name: Enable PubkeyAuthentication
   lineinfile:
@@ -27,6 +27,7 @@
     line: "PubkeyAuthentication yes"
     state: present
     backup: yes
-  tags: ssh_config
   notify:
     - restart ssh
+  tags: ssh_config
+
