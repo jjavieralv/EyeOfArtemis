@@ -6,12 +6,22 @@
   - [Index](#index)
   - [Ansible](#ansible)
   - [Install and config SO](#install-and-config-so)
-    - [Create instalation device](#create-instalation-device)
-    - [Install Centos Stream 9](#install-centos-stream-9)
-    - [Config SO](#config-so)
-      - [Update](#update)
-      - [Network config](#network-config)
-        - [Set static IP](#set-static-ip)
+    - [Ubuntu](#ubuntu)
+      - [Create instalation device](#create-instalation-device)
+      - [Install Ubuntu](#install-ubuntu)
+      - [Config SO](#config-so)
+        - [Create principal user](#create-principal-user)
+        - [Update](#update)
+        - [Network config](#network-config)
+          - [Set static IP](#set-static-ip)
+        - [Install openSSH](#install-openssh)
+    - [Centos](#centos)
+      - [Create instalation device](#create-instalation-device-1)
+      - [Install Centos Stream 9](#install-centos-stream-9)
+      - [Config SO](#config-so-1)
+        - [Update](#update-1)
+        - [Network config](#network-config-1)
+          - [Set static IP](#set-static-ip-1)
 
 ## Ansible
 
@@ -19,13 +29,123 @@ How to use the ansible technology to load the modules [here](./ansible/README.md
 
 ## Install and config SO
 
-### Create instalation device
+### Ubuntu
+
+#### Create instalation device
+
+1. Download centos Ubuntu server iso [here](https://ubuntu.com/download/server)
+2. Put iso file into an USB [guide](https://www.lifewire.com/how-to-burn-an-iso-file-to-a-usb-drive-2619270)
+3. Connect the USB into the server and boot it
+
+#### Install Ubuntu
+
+1. Select install Ubuntu
+2. Select the disk or partition you want to use
+3. Set a strong root password and store it
+4. Continue your installation
+
+#### Config SO
+
+##### Create principal user
+
+1. Create a user called eyeofartemis. Use a strong credentials and store them
+
+    ```shell
+    adduser eyeofartemis
+    ```
+
+2. Add them sudo permissions
+
+    ```shell
+    usermod -aG sudo eyeofartemis
+    ```
+
+##### Update
+
+1. Open a terminal and execute
+
+```shell
+sudo apt update
+```
+
+```shell
+sudo apt upgrade -y
+```
+
+##### Network config
+
+###### Set static IP
+
+This is needed because it sets the path to find the server from outside
+
+1. find your device name
+
+    ```shell
+    ip a
+    ```
+
+2. In case you want to use your current network config
+   1. Find your current device ip. You can use your current ip(use ```shell ip a``` to know
+   2. Find your Gateway config. You can find it using ```shell route -n```
+3. Set your static IP, Gateway and DNS
+
+    ```shell
+    network:
+    version: 2
+    renderer: networkd
+    ethernets:
+      enp0s25:
+        addresses:
+          - {your_device_ip}/24
+        routes:
+          - to: default
+            via: {your_gateway_ip}
+        nameservers:
+            addresses: [{your_dns1_ip}, {your_dnsx_ip}]
+    ```
+
+    Example
+
+    ```shell
+    network:
+      version: 2
+      renderer: networkd
+      ethernets:
+        enp0s25:
+          addresses:
+            - 192.168.1.30/24
+          routes:
+            - to: default
+              via: 192.168.1.1
+          nameservers:
+              addresses: [1.1.1.1, 8.8.8.8, 4.4.4.4]
+    ```
+
+4. Apply your config
+
+    ```shell
+    sudo netplan apply
+    ```
+
+##### Install openSSH
+
+Just if you didnt added it during instalation process
+
+```shell
+sudo apt install openssh-server -y
+```
+
+### Centos
+
+I strongly recommend you **NOT** to use it because there are hardware failures when you use CentOS
+
+#### Create instalation device
 
 1. Download centos Stream 9 iso [here](https://www.centos.org/download/)
 2. Put iso file into an USB [guide](https://www.lifewire.com/how-to-burn-an-iso-file-to-a-usb-drive-2619270)
 3. Connect the USB into the server and boot it
 
-### Install Centos Stream 9
+#### Install Centos Stream 9
 
 1. Select install centos
 2. Select the disk or partition you want to use
@@ -35,9 +155,9 @@ How to use the ansible technology to load the modules [here](./ansible/README.md
    2. Strong password that must be stored
 5. Continue your installation
 
-### Config SO
+#### Config SO
 
-#### Update
+##### Update
 
 1. Open a terminal and execute
 
@@ -51,9 +171,9 @@ sudo dnf update
 
 In the second step you must write the user password to gain admin privileges
 
-#### Network config
+##### Network config
 
-##### Set static IP
+###### Set static IP
 
 This is needed because it sets the path to find the server from outside
 
