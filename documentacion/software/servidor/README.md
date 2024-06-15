@@ -84,47 +84,97 @@ This is needed because it sets the path to find the server from outside
     ip a
     ```
 
-2. In case you want to use your current network config
-   1. Find your current device ip. You can use your current ip(use ```shell ip a``` to know
-   2. Find your Gateway config. You can find it using ```shell route -n```
-3. Set your static IP, Gateway and DNS
+2. In case you are using wifi adapter
 
     ```shell
+    sudo apt install wpasupplicant -y
+    ```
+
+3. In case you want to use your current network config
+   1. Find your current device ip. You can use your current ip(use ```shell ip a``` to know
+   2. Find your Gateway config. You can find it using ```shell route -n```
+4. Set your static IP, Gateway and DNS. To do this, we will create a file on /etc/netplan/ that will be used as template. It MUST HAS .YAML extension
+
+
+    ```shell
+    sudo echo '
     network:
     version: 2
     renderer: networkd
+    #if you are using ubuntu desktop probably you need to change renderer to
+    #renderer: NetworkManager
     ethernets:
-      enp0s25:
+      {your_interface_name}:
         addresses:
-          - {your_device_ip}/24
+          - {your_interface_ip}/{your_interface_mask}
         routes:
           - to: default
             via: {your_gateway_ip}
         nameservers:
-            addresses: [{your_dns1_ip}, {your_dnsx_ip}]
+            addresses: [{your_dns1_ip}, {your_dnsx_ip}]' >/etc/netplan/01-default.yaml
     ```
 
     Example
 
     ```shell
+    sudo echo '
     network:
       version: 2
       renderer: networkd
       ethernets:
-        enp0s25:
+        enp2s0:
           addresses:
             - 192.168.1.30/24
           routes:
             - to: default
               via: 192.168.1.1
           nameservers:
-              addresses: [1.1.1.1, 8.8.8.8, 4.4.4.4]
+              addresses: [1.1.1.1, 8.8.8.8, 4.4.4.4]' >/etc/netplan/01-default.yaml
     ```
 
-4. Apply your config
+    Example with eth and wifi as backup
+
+    ```shell
+    network:
+    version: 2
+    renderer: NetworkManager
+    ethernets:
+      enp2s0:
+        dhcp4: no
+        addresses:
+          - 192.168.1.30/24
+        routes:
+          - to: default
+            via: 192.168.1.1
+            metric: 100
+        nameservers:
+          addresses: [8.8.8.8, 8.8.4.4]
+    wifis:
+      wlxb0487a8d1bad:
+        dhcp4: no
+        access-points:
+          "wifi_ssid":
+            password: "********"
+        addresses:
+          - 192.168.1.30/24
+        routes:
+          - to: default
+            via: 192.168.1.1
+            metric: 200
+        nameservers:
+          addresses: [8.8.8.8, 8.8.4.4]
+    ```
+
+5. Apply your config
 
     ```shell
     sudo netplan apply
+    ```
+
+6. Check iff the config has been updated correctly
+
+    ```shell
+    ip a    
     ```
 
 ##### Install openSSH

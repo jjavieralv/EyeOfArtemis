@@ -18,11 +18,11 @@ users_list:
     shell: /sbin/nologin
     create_home: true
     append: true
-    
+
   - name: ansible
     uid: 9902
     group: management
-    groups: management, wheel
+    groups: "{{ 'management, wheel' if ansible_distribution == 'RedHat' else 'management, sudo' }}"
     comment: "Ansible management"
     ## optional
     password_lock: true
