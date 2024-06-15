@@ -43,7 +43,7 @@ ansible-playbook -i inventories/test.yml -t docker-compose,prepare-system,instal
 
 ## 1.4. Install mosquitto
 
-First of all, on your host machine (where you execute ansible) you need to install a python lib
+First of all, on YOUR host machine (where you execute ansible) you need to install a python lib
 
 ```shell
 sudo apt install python3-passlib

@@ -6,8 +6,32 @@ mqtt:
   port: {{mosquitto.listener}}
 
 detectors:
-  cpu1:
-    type: cpu
+  #cpu1:
+  #  type: cpu
+  coral:
+    type: edgetpu
+    device: pci:0
+
+detect:
+  enabled: false
+  width: 640
+  height: 352
+  fps: 5
+
+ffmpeg:
+  hwaccel_args:
+    - -hwaccel
+    - vaapi
+
+record:
+  enabled: false
+
+snapshots:
+  enabled: false
+
+birdseye:
+  enabled: true
+  mode: continuous
 
 
 cameras:

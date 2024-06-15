@@ -1,12 +1,101 @@
 # Server software
 
-## Instalation steps
+## Index
 
-1. Create user with admin permissions
-2. Add alias dnf="LANG=C.UTF-8 dnf" to .bashrc .Config-manager no funcionará si no lo haces
-3. Instalar Docker
-4. Instalar portainer <https://tecadmin.net/how-to-install-docker-on-centos-stream-9/>
-5. Arrancar portainer
-6. Instalar mosquitto <https://domotiqueros.com/como-instalar-mosquitto-en-portainer/>
-7. Instalar frigate VIDEO
-8. S
+- [Server software](#server-software)
+  - [Index](#index)
+  - [Ansible](#ansible)
+  - [Install and config SO](#install-and-config-so)
+    - [Create instalation device](#create-instalation-device)
+    - [Install Centos Stream 9](#install-centos-stream-9)
+    - [Config SO](#config-so)
+      - [Update](#update)
+      - [Network config](#network-config)
+        - [Set static IP](#set-static-ip)
+
+## Ansible
+
+How to use the ansible technology to load the modules [here](./ansible/README.md)
+
+## Install and config SO
+
+### Create instalation device
+
+1. Download centos Stream 9 iso [here](https://www.centos.org/download/)
+2. Put iso file into an USB [guide](https://www.lifewire.com/how-to-burn-an-iso-file-to-a-usb-drive-2619270)
+3. Connect the USB into the server and boot it
+
+### Install Centos Stream 9
+
+1. Select install centos
+2. Select the disk or partition you want to use
+3. Set a strong root password and store it
+4. Create a user called eyeofartemis
+   1. with admin privileges
+   2. Strong password that must be stored
+5. Continue your installation
+
+### Config SO
+
+#### Update
+
+1. Open a terminal and execute
+
+```shell
+dnf check-update
+```
+
+```shell
+sudo dnf update
+```
+
+In the second step you must write the user password to gain admin privileges
+
+#### Network config
+
+##### Set static IP
+
+This is needed because it sets the path to find the server from outside
+
+1. find your device name
+
+    ```shell
+    nmcli device
+    ```
+
+2. In case you want to use your current network config
+   1. Find your current ip. You can use your current ip(use ```shell ip a``` to know
+   2. Find your Gateway config. You can find it using ```shell route -n```
+3. Set your static IP
+
+    ```shell
+    nmcli connection modify {your_device_name} ipv4.addresses {your_static_ip}/24
+    ```
+
+4. Change the IP management to manual
+
+    ```shell
+    nmcli connection modify {your_device_name} ipv4.method manual
+    ```
+
+5. Set the gateway IP
+
+    ```shell
+    nmcli connection modify {your_device_name} ipv4.gateway {your_gateway_ip}
+    ```
+
+6. Set up the DNS (optional)
+
+    ```shell
+    nmcli connection modify {your_device_name} ipv4.dns 8.8.8.8
+    ```
+
+7. Restart networkManager device
+
+    ```shell
+    nmcli connection down {your_device_name}
+    ```
+
+    ```shell
+    nmcli connection up {your_device_name}
+    ```
