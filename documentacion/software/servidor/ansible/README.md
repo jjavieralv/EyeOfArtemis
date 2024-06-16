@@ -49,6 +49,12 @@ First of all, on YOUR host machine (where you execute ansible) you need to insta
 sudo apt install python3-passlib
 ```
 
+Or if you are doing your things right with an python env created
+
+```shell
+  {path_to_your_pip_in_environment} install passlib
+```
+
 Then, you are ready to install mosquitto
 
 ```shell

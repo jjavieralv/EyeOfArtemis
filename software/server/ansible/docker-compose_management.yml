@@ -3,5 +3,5 @@
   hosts: all
   gather_facts: true
 
-  roles: 
+  roles:
     - role: docker-compose

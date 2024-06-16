@@ -1,52 +1,59 @@
 ---
-- include_vars:
+- name: Include vars
+  ansible.builtin.include_vars:
     dir: mosquitto
-    extensions: 
+    extensions:
       - yml
   tags: always
 
 - name: Delete Mosquitto
+  tags: delete
   block:
-
     - name: Docker compose mosquitto down
-      debug: 
+      ansible.builtin.debug:
         msg: "Down mosquitto..."
       changed_when: true
       notify: 'compose down'
 
-    - meta: flush_handlers
-  
+    - name: Flush handlers
+      ansible.builtin.meta:
+        free_form: flush_handlers
+
     - name: Delete configs
-      file:
+      loop:
+        - "{{ mosquitto_main.path }}"
+      ansible.builtin.file:
         path: "{{ item }}"
         state: absent
-      with_items: 
-        - "{{mosquitto_main.path}}"
 
-  tags: delete
-  
 - name: Config mosquitto
+  tags: config
   block:
     - name: Create mosquitto dirs
-      file: 
+      loop:
+        - "{{ main_paths.config.path }}"
+        - "{{ mosquitto_main.path }}/docker-compose"
+      ansible.builtin.file:
         path: "{{ item }}"
         state: directory
         owner: "{{ dockercompose_user }}"
-      with_items: 
-        - "{{main_paths.config.path}}"
-        - "{{mosquitto_main.path}}/docker-compose"
+        mode: '0766'
+
 
     - name: Copy mosquitto docker_compose template
-      template:
+      ansible.builtin.template:
         src: files/mosquitto/docker-compose/docker-compose.yml.j2
-        dest: "{{mosquitto_main.path}}/docker-compose/docker-compose.yml"
+        dest: "{{ mosquitto_main.path }}/docker-compose/docker-compose.yml"
+        owner: "{{ dockercompose_user }}"
+        mode: '0766'
 
     - name: Copy mosquitto config template
-      template:
+      ansible.builtin.template:
         src: "files/mosquitto/configs/{{ item | basename }}"
-        dest: "{{ main_paths.config.path}}/{{ item | basename | splitext | first}}"
-      with_fileglob: 'mosquitto/configs/*'
-  tags: config
+        dest: "{{ main_paths.config.path }}/{{ item | basename | splitext | first }}"
+        owner: "{{ dockercompose_user }}"
+        mode: '0644'
+      loop: "{{ lookup('ansible.builtin.fileglob', 'mosquitto/configs/*', wantlist=True) }}"
 
 
 ####################
@@ -55,21 +62,21 @@
 
 
 - name: Docker compose mosquitto up
-  debug: 
+  ansible.builtin.debug:
     msg: "Up mosquitto..."
   changed_when: true
   notify: compose up
   tags: up
 
 - name: Docker compose mosquitto down
-  debug: 
+  ansible.builtin.debug:
     msg: "Down mosquitto..."
   changed_when: true
   notify: 'compose down'
   tags: down
 
 - name: Docker compose mosquitto restart
-  debug: 
+  ansible.builtin.debug:
     msg: "restart mosquitto..."
   changed_when: true
   notify: 'compose restart'

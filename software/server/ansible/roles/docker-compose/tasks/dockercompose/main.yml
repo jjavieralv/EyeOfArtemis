@@ -1,15 +1,15 @@
 ---
 
 - name: Install aplication
-  include_tasks: install_centos.yml
-  when: ansible_distribution = "Centos"
+  ansible.builtin.include_tasks: install_centos.yml
+  when: ansible_distribution == "Centos"
   tags:
     - prepare-system
     - install
 
 - name: Install aplication
-  include_tasks: install_ubuntu.yml
-  when: ansible_distribution = "Ubuntu"
+  ansible.builtin.include_tasks: install_ubuntu.yml
+  when: ansible_distribution == "Ubuntu"
   tags:
     - prepare-system
     - install

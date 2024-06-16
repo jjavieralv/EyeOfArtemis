@@ -29,11 +29,10 @@
       when: ansible_distribution == 'RedHat'
 
     - name: Install python-pip
-      ansible.builtin.yum: 
+      ansible.builtin.yum:
         name: python-pip
-        update_cache: yes 
+        update_cache: true
         state: present
-  
 
 - name: install docker
   become: true
@@ -45,34 +44,34 @@
         state: present
 
     - name: Add Docker repo
-      get_url:    
+      get_url:
         url: https://download.docker.com/linux/centos/docker-ce.repo
         dest: /etc/yum.repos.d/docker-ce.repo
 
     - name: Install docker-ce & epel-release
       ansible.builtin.yum:
         name: "{{ packages }}"
-        update_cache: yes
+        update_cache: true
         state: present
-      vars:  
+      vars:
         packages:
           - docker-ce
-          - epel-release 
+          - epel-release
       when: ansible_distribution == 'CentOS'
 
-    - name: Install docker compose 
-      pip: 
-        name: docker-compose 
-        state: present 
+    - name: Install docker compose
+      pip:
+        name: docker-compose
+        state: present
 
     - name: Add users to the Docker group
       user:
         name: "{{ dockercompose_user }}"
         groups: docker
-        #append: yes
-        
-    - name: Start Docker Daemon 
-      systemd: 
+        # append: yes
+
+    - name: Start Docker Daemon
+      systemd:
         state: started
         enabled: yes
         name: docker
