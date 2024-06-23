@@ -1,4 +1,7 @@
 ---
+###############
+# Config vars #
+###############
 - name: Include frigate vars
   ansible.builtin.include_vars:
     dir: frigate
@@ -10,6 +13,10 @@
   ansible.builtin.include_vars:
     file: mosquitto/app-config.yml
   tags: always
+
+##################
+# Config Frigate #
+##################
 
 - name: Delete frigate
   tags: delete
@@ -48,7 +55,7 @@
 
     - name: Copy frigate docker_compose template
       ansible.builtin.template:
-        src: "{{ frigate_main.path }}/docker-compose/docker-compose.yml.j2"
+        src: "files/frigate/docker-compose/docker-compose.yml.j2"
         dest: "{{frigate_main.path}}/docker-compose/docker-compose.yml"
         owner: "{{ dockercompose_user }}"
         mode: '0644'
@@ -60,8 +67,8 @@
 
     - name: Copy frigate config config
       ansible.builtin.template:
-        src: "{{ frigate_main.path }}/configs/{{item | basename}}"
-        dest: "{{ main_paths.config.path}}/{{item | basename | splitext | first}}"
+        src: "files/frigate/configs/{{ item | basename }}"
+        dest: "{{ main_paths.config.path}}/{{ item | basename | splitext | first }}"
         mode: '0644'
       loop: "{{ lookup('ansible.builtin.fileglob', 'frigate/configs/*', wantlist=True) }}"
 
@@ -70,21 +77,21 @@
 ##################
 
 - name: Docker compose frigate up
-  ansible.builtin.debug: 
+  ansible.builtin.debug:
     msg: "Up frigate..."
   changed_when: true
   notify: compose up
   tags: up
 
 - name: Docker compose frigate down
-  ansible.builtin.debug: 
+  ansible.builtin.debug:
     msg: "Down frigate..."
   changed_when: true
   notify: 'compose down'
   tags: down
 
 - name: Docker compose frigate restart
-  ansible.builtin.debug: 
+  ansible.builtin.debug:
     msg: "restart frigate..."
   changed_when: true
   notify: 'compose restart'

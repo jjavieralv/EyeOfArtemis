@@ -1,10 +1,18 @@
 ---
+###############
+# Config vars #
+###############
+
 - name: Include vars
   ansible.builtin.include_vars:
     dir: mosquitto
     extensions:
       - yml
   tags: always
+
+####################
+# Config Mosquitto #
+####################
 
 - name: Delete Mosquitto
   tags: delete

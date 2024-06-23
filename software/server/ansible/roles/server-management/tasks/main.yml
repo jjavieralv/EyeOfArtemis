@@ -2,19 +2,19 @@
 ## Management Users and Groups
 
 - name: Check if this is first execution
+  tags: first-execution
   ansible.builtin.debug:
     msg: "This is first execution"
-  tags: first-execution
 
 - name: Users and Groups management
-  ansible.builtin.include_tasks: users_groups.yml
   tags:
     - groups
     - users
     - config_sudoers
+  ansible.builtin.include_tasks: users_groups.yml
 
 - name: Configure ssh access
-  ansible.builtin.include_tasks: ssh.yml
   tags:
     - ssh_copy
     - ssh_config
+  ansible.builtin.include_tasks: ssh.yml
