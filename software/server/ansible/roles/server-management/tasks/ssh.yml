@@ -14,7 +14,7 @@
 - name: Disable root login
   tags: ssh_config
   notify:
-    - restart ssh
+    - Restart ssh
   ansible.builtin.lineinfile:
     dest: /etc/ssh/sshd_config
     regexp: '^.?PermitRootLogin'
@@ -26,7 +26,7 @@
 - name: Enable PubkeyAuthentication
   tags: ssh_config
   notify:
-    - restart ssh
+    - Restart ssh
   ansible.builtin.lineinfile:
     dest: /etc/ssh/sshd_config
     regexp: '#PubkeyAuthentication'

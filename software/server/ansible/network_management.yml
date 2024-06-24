@@ -1,0 +1,10 @@
+- name: Network config
+  hosts: all
+  gather_facts: true
+  vars:
+      ansible_become: true
+  tasks:
+      - name: Network config
+        tags: always
+        ansible.builtin.include_role:
+            name: network-management

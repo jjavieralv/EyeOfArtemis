@@ -5,8 +5,13 @@
   ansible.builtin.include_vars:
     file: vars/main.yml
 
+- name: Networking Config
+  tags: network-config
+  ansible.builtin.include_tasks:
+    file: network-config.yml
+
 - name: Prepare Network packages
   tags: packages_config
   loop: "{{ network_packages }}"
   ansible.builtin.include_tasks:
-    include_tasks: "{{ item }}.yml"
+    file: "{{ item }}.yml"

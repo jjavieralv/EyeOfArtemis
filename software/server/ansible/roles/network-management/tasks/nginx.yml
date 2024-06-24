@@ -12,3 +12,19 @@
   ansible.builtin.package:
     name: nginx
     state: "{{ nginx.version }}"
+
+- name: Copy nginx files
+  tags: always
+  loop: "{{ lookup('ansible.builtin.fileglob', 'files/nginx/*', wantlist=True) | reject('search', '.j2$') | list }}"
+  ansible.builtin.copy:
+    src: "files/nginx/{{ item }}"
+    dest: "/etc/nginx/{{ item }}"
+    mode: '0644'
+
+- name: Apply nginx templates
+  tags: always
+  loop: "{{ lookup('ansible.builtin.fileglob', 'files/nginx/*.j2', wantlist=True) }}"
+  ansible.builtin.template:
+    src: "files/nginx/{{ item }}"
+    dest: "/etc/nginx/{{ item | splitext | first }}"
+    mode: '0644'

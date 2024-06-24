@@ -12,16 +12,28 @@ detectors:
     type: edgetpu
     device: pci:0
 
-detect:
-  enabled: false
-  width: 640
-  height: 352
-  fps: 5
+#detect:
+#  enabled: false
+#  width: 640
+#  height: 352
+#  fps: 5
 
+
+# I had to install 
+# ``` sudo apt install i965-va-driver vainfo libva-glx2 libva-drm2 ffmpeg ```
+# ``` export LIBVA_DRIVER_NAME=i965 ```
+# check what can I use ```ffmpeg -hide_banner -hwaccels```
+# It could be different on other systems
+#
 ffmpeg:
   hwaccel_args:
     - -hwaccel
     - vaapi
+    - -hwaccel_device
+    - /dev/dri/renderD128
+    - -hwaccel_output_format
+    - vaapi_moco
+
 
 record:
   enabled: false

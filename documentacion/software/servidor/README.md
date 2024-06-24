@@ -22,6 +22,10 @@
         - [Update](#update-1)
         - [Network config](#network-config-1)
           - [Set static IP](#set-static-ip-1)
+  - [Hardware acceleration](#hardware-acceleration)
+    - [FFMPEG](#ffmpeg)
+      - [Description](#description)
+      - [How to use](#how-to-use)
 
 ## Ansible
 
@@ -137,7 +141,7 @@ This is needed because it sets the path to find the server from outside
     ```shell
     network:
     version: 2
-    renderer: NetworkManager
+    renderer: networkd
     ethernets:
       enp2s0:
         dhcp4: no
@@ -170,6 +174,9 @@ This is needed because it sets the path to find the server from outside
     ```shell
     sudo netplan apply
     ```
+
+    Sometimes you neet to reboot here. Sometimes you must execute this command several times (I got error with Networkd service at first time)
+
 
 6. Check iff the config has been updated correctly
 
@@ -269,3 +276,25 @@ This is needed because it sets the path to find the server from outside
     ```shell
     nmcli connection up {your_device_name}
     ```
+
+## Hardware acceleration
+
+### FFMPEG
+
+#### Description
+
+Is the system that will enable hardware acceleration on video in order to improve the usage and free CPU
+
+#### How to use
+
+1. Install ffmpeg
+
+    ```bash
+    sudo snap install ffmpeg
+    ```
+
+2. List hardware acceleration available
+
+  ``` shell
+  ffmpeg -hwaccels
+  ```
