@@ -1,40 +1,45 @@
+# This is the configuration for the Axis camera
 camera_axis:
+  # FFmpeg settings for video stream processing
   ffmpeg:
     inputs:
-    #- path: rtsp://192.168.1.136:8080/h264_opus.sdp
-    - path: rtsp://192.168.1.129/mpeg4/media.amp
-      roles:
-      - detect
-          #- record
-            #      input_args: -avoid_negative_ts make_zero -fflags nobuffer -flags low_delay -strict experimental -fflags +genpts+discardcorrupt -use_wallclock_as_timestamps 1 -c:v mjpeg
-            #      output_args:
-            #record: -f segment -segment_time 10 -segment_format mp4 -reset_timestamps 1 -strftime 1 -c:v libx264 -an
-      #rtmp: -c:v libx264 -an -f flv
+      # The path to the video stream
+      - path: rtsp://192.168.1.129/mpeg4/media.amp
+        roles:
+          # The role of this input is to detect objects
+          - detect
+  # RTMP settings for live streaming
   rtmp:
+    # RTMP is currently disabled
     enabled: false
+  # Settings for object detection
   detect:
+    # Resolution for object detection
     width: 640
     height: 480
-    fps: 20
+    # Frames per second for object detection
+    fps: 2
+    # Object detection is enabled
     enabled: True
-  #motion:
-  #  mask:
-  #  - 1920,0,1920,1080,0,1080,0,0
+  # Objects to track
   objects:
     track:
-      #- person
+      # Currently tracking books and phones
       - book
+      - phone
+    # Filters for object tracking
     filters:
       book:
+        # Minimum confidence for book detection
         threshold: 0.8
-        #min_area: 500
-        #max_area: 100000
+  # Snapshot settings
   snapshots:
+    # Snapshots are enabled
     enabled: True
+  # MQTT settings for publishing snapshots
   mqtt:
-      # Optional: Enable publishing snapshot via mqtt for camera (default: shown below)
-      # NOTE: Only applies to publishing image data to MQTT via 'frigate/<camera_name>/<object_name>/snapshot'.
-      # All other messages will still be published.
-      enabled: True
-      # Optional: print a timestamp on the snapshots (default: shown below)
-      timestamp: True
+    # MQTT is enabled
+    enabled: True
+    # Timestamps are printed on the snapshots
+    timestamp: True
+

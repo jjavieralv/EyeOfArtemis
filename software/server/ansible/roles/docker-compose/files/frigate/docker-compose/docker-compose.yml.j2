@@ -6,10 +6,10 @@ services:
     restart: {{ restart }}
     image: {{ image.name }}:{{ image.version }}
     shm_size: {{ shm_size }}
- #   devices:
+    devices:
  #     - /dev/bus/usb:/dev/bus/usb # passes the USB Coral, needs to be modified for other versions
- #     - /dev/apex_0:/dev/apex_0 # passes a PCIe Coral, follow driver instructions here https://coral.ai/docs/m2/get-started/#2a-on-linux
- #     - /dev/dri/renderD128 # for intel hwaccel, needs to be updated for your hardware
+      - /dev/apex_0:/dev/apex_0 # passes a PCIe Coral, follow driver instructions here https://coral.ai/docs/m2/get-started/#2a-on-linux
+      - /dev/dri/renderD128 # for intel hwaccel, needs to be updated for your hardware
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - {{ main_paths.config.path }}/{{ main_paths.config.filename }}:/config/config.yml
