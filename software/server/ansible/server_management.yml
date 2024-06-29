@@ -14,7 +14,6 @@
 
     - name: Initial config
       tags: always
+      when: "'first-execution' not in ansible_run_tags"
       ansible.builtin.include_role:
         name: server-management
-
-      when: "'first-execution' not in ansible_run_tags"

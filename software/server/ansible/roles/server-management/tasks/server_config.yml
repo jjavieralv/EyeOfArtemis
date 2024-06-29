@@ -1,0 +1,18 @@
+---
+- name: "Disable automatic locking when the notebook lid is closed"
+  tags: energy
+  notify:
+    - Restart systemd-logind
+  loop:
+    - { regexp: '.*HandleLidSwitch=.*', line: "HandleLidSwitch=ignore" }
+    - { regexp: '.*HandleLidSwitchExternalPower=.*', line: "HandleLidSwitchExternalPower=ignore" }
+    - { regexp: '.*HandleLidSwitchDocked=.*', line: "HandleLidSwitchDocked=ignore" }
+    - { regexp: '.*LidSwitchIgnoreInhibited=.*', line: "LidSwitchIgnoreInhibited=no" }
+  loop_control:
+    label: "{{ item.line }}"
+  ansible.builtin.lineinfile:
+    dest: /etc/systemd/logind.conf
+    regexp: "{{ item.regexp }}"
+    line: "{{ item.line }}"
+    state: present
+    backup: true

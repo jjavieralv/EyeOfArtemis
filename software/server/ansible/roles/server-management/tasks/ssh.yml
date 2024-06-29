@@ -9,7 +9,6 @@
     user: "{{ ssh_user }}"
     key: "{{ lookup('file', '../files/' + ssh_user + '.pub') }}"
     state: present
-  
 
 - name: Disable root login
   tags: ssh_config
@@ -21,7 +20,6 @@
     line: "PermitRootLogin no"
     state: present
     backup: true
-
 
 - name: Enable PubkeyAuthentication
   tags: ssh_config

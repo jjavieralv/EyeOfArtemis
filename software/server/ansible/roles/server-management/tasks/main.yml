@@ -18,3 +18,8 @@
     - ssh_copy
     - ssh_config
   ansible.builtin.include_tasks: ssh.yml
+
+- name: Configure server
+  tags:
+    - energy
+  ansible.builtin.include_tasks: server_config.yml

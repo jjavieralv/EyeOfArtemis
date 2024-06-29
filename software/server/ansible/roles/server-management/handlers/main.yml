@@ -12,3 +12,9 @@
   ansible.builtin.service:
     name: ssh
     state: restarted
+
+- name: Restart systemd-logind
+  when: ansible_distribution == "Ubuntu"
+  ansible.builtin.service:
+    name: systemd-logind
+    state: restarted
