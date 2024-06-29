@@ -46,11 +46,13 @@ ansible-playbook -i {your_inventory} -t first-execution,groups,users,config_sudo
 
 #### 1.2.1.5. Tag tree
 
+- **first-execution**: first execution that enable you to use ansible user on following executions
 - **groups**: creates groups defined in vars/users_groups.yml
 - **users**: creates users defined in vars/users_groups.yml
 - **config_sudoers**: Make users passwordless for sudo in group wheel
 - **ssh_copy**: copy the pub key for the final ansible user (default: ansible)
 - **ssh_config**: securize ssh access config
+- **energy**: set up energy plan
 
 ### 1.2.2. docker-compose
 
