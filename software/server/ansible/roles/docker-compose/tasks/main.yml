@@ -1,33 +1,39 @@
 ---
-- include_vars: vars/main.yml
+- name: Include vars
+  ansible.builtin.include_vars:
+    file: vars/main.yml
   tags: always
 
 - name: Manage docker-compose
-  include_tasks: dockercompose/main.yml
+  ansible.builtin.include_tasks:
+    file: dockercompose/main.yml
   tags:
     - docker-compose
 
 - name: Manage mosquitto
-  include_tasks: mosquitto/mosquitto.yml
+  ansible.builtin.include_tasks:
+    file: mosquitto/main.yml
   args:
     apply:
-      become_user: "{{dockercompose_user}}"
+      # become_user: "{{ dockercompose_user }}"
       become: true
   tags:
     - mosquitto
-    
+
 - name: Manage frigate
-  include_tasks: frigate/main.yml
+  ansible.builtin.include_tasks:
+    file: frigate/main.yml
   args:
     apply:
-      become_user: "{{dockercompose_user}}"
+      # become_user: "{{ dockercompose_user }}"
       become: true
   tags:
     - frigate
 
-- name: hello world docker
-  import_tasks: hello.yml
-  become_user: "{{dockercompose_user}}"
+- name: Hello world docker
+  ansible.builtin.import_tasks:
+    file: hello.yml
+  become_user: "{{ dockercompose_user }}"
   become: true
   tags:
     - hello

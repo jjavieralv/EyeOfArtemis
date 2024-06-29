@@ -1,0 +1,91 @@
+---
+###############
+# Config vars #
+###############
+
+- name: Include vars
+  ansible.builtin.include_vars:
+    dir: mosquitto
+    extensions:
+      - yml
+  tags: always
+
+####################
+# Config Mosquitto #
+####################
+
+- name: Delete Mosquitto
+  tags: delete
+  block:
+    - name: Docker compose mosquitto down
+      ansible.builtin.debug:
+        msg: "Down mosquitto..."
+      changed_when: true
+      notify: 'compose down'
+
+    - name: Flush handlers
+      ansible.builtin.meta:
+        free_form: flush_handlers
+
+    - name: Delete configs
+      loop:
+        - "{{ mosquitto_main.path }}"
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+
+- name: Config mosquitto
+  tags: config
+  block:
+    - name: Create mosquitto dirs
+      loop:
+        - "{{ main_paths.config.path }}"
+        - "{{ mosquitto_main.path }}/docker-compose"
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ dockercompose_user }}"
+        mode: '0766'
+
+
+    - name: Copy mosquitto docker_compose template
+      ansible.builtin.template:
+        src: files/mosquitto/docker-compose/docker-compose.yml.j2
+        dest: "{{ mosquitto_main.path }}/docker-compose/docker-compose.yml"
+        owner: "{{ dockercompose_user }}"
+        mode: '0766'
+
+    - name: Copy mosquitto config template
+      ansible.builtin.template:
+        src: "files/mosquitto/configs/{{ item | basename }}"
+        dest: "{{ main_paths.config.path }}/{{ item | basename | splitext | first }}"
+        owner: "{{ dockercompose_user }}"
+        mode: '0644'
+      loop: "{{ lookup('ansible.builtin.fileglob', 'mosquitto/configs/*', wantlist=True) }}"
+
+
+####################
+# Manage Mosquitto #
+####################
+
+
+- name: Docker compose mosquitto up
+  ansible.builtin.debug:
+    msg: "Up mosquitto..."
+  changed_when: true
+  notify: compose up
+  tags: up
+
+- name: Docker compose mosquitto down
+  ansible.builtin.debug:
+    msg: "Down mosquitto..."
+  changed_when: true
+  notify: 'compose down'
+  tags: down
+
+- name: Docker compose mosquitto restart
+  ansible.builtin.debug:
+    msg: "restart mosquitto..."
+  changed_when: true
+  notify: 'compose restart'
+  tags: restart

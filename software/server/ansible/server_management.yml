@@ -1,10 +1,20 @@
 ---
-- name: Config server
+- name: Server-management
   hosts: all
-  gather_facts: false
+  gather_facts: true
+  vars:
+    ansible_user: "{{ 'eyeofartemis' if 'first-execution' in ansible_run_tags else 'ansible' }}"
+    ansible_become: true
+  tasks:
+    - name: Initial config
+      tags: first-execution
+      ansible.builtin.include_role:
+        name: server-management
 
-  roles: 
-    - role: server-management
-      vars: 
-        - ansible_become: true
-        - ansible_user: jjavieralv
+
+    - name: Initial config
+      tags: always
+      ansible.builtin.include_role:
+        name: server-management
+
+      when: "'first-execution' not in ansible_run_tags"

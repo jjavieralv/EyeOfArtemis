@@ -9,10 +9,10 @@ configs:
   mosquitto_users: /mosquitto_users
   mosquitto_config: /mosquitto_config
 
-entrypoint: 'mosquitto -c {{configs.mosquitto_config}}'
+entrypoint: 'mosquitto -c {{ configs.mosquitto_config }}'
 
 mosquitto_main:
-  path: "{{dockercompose.path}}/mosquitto"
+  path: "{{ dockercompose.path }}/mosquitto"
 
 main_paths:
   config:
@@ -20,4 +20,4 @@ main_paths:
 
 docker_compose:
   project:
-    path: "{{mosquitto_main.path}}/docker-compose"
+    path: "{{ mosquitto_main.path }}/docker-compose"

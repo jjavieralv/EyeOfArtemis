@@ -1,0 +1,45 @@
+# This is the configuration for the Axis camera
+camera_axis:
+  # FFmpeg settings for video stream processing
+  ffmpeg:
+    inputs:
+      # The path to the video stream
+      - path: rtsp://192.168.1.129/mpeg4/media.amp
+        roles:
+          # The role of this input is to detect objects
+          - detect
+  # RTMP settings for live streaming
+  rtmp:
+    # RTMP is currently disabled
+    enabled: false
+  # Settings for object detection
+  detect:
+    # Resolution for object detection
+    width: 640
+    height: 480
+    # Frames per second for object detection
+    fps: 2
+    # Object detection is enabled
+    enabled: True
+  # Objects to track
+  objects:
+    track:
+      # Currently tracking books and phones
+      - book
+      - phone
+    # Filters for object tracking
+    filters:
+      book:
+        # Minimum confidence for book detection
+        threshold: 0.8
+  # Snapshot settings
+  snapshots:
+    # Snapshots are enabled
+    enabled: True
+  # MQTT settings for publishing snapshots
+  mqtt:
+    # MQTT is enabled
+    enabled: True
+    # Timestamps are printed on the snapshots
+    timestamp: True
+

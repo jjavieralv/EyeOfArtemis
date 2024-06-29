@@ -1,38 +1,51 @@
 ---
+
 - name: Include var file
-  include_vars: vars/users_groups.yml
   tags: always
+  ansible.builtin.include_vars:
+    file: vars/users_groups.yml
 
 - name: Create group
-  group:
-    name: "{{ item.name }}"
-    gid:  "{{ item.gid }}"
-    local: true
-    state: present
-  tags: groups
   with_items: "{{ groups_list }}"
+  tags: groups
+  ansible.builtin.group:
+    name: "{{ item.name }}"
+    gid: "{{ item.gid }}"
+    # local: true
+    state: present
 
 
-- name: create users
-  user:
+- name: Create users
+  with_items: '{{ users_list }}'
+  tags: users
+  ansible.builtin.user:
     name: "{{ item.name }}"
     uid: "{{ item.uid }}"
-    password_lock: "{{ item.password_lock |default(false)|bool }}"
-    append: "{{ item.append |default(false)|bool }}"
+    password_lock: "{{ item.password_lock | default(false) | bool }}"
+    append: "{{ item.append | default(false) | bool }}"
     groups: "{{ item.groups }}"
     group: "{{ item.group }}"
-    shell: "{{ item.shell |default('/bin/bash') }}"
-    create_home: "{{ item.create_home|default(false)|bool }}"
+    shell: "{{ item.shell | default('/bin/bash') }}"
+    create_home: "{{ item.create_home | default(false) | bool }}"
     comment: "{{ item.comment }}"
     state: present
-  tags: users
-  with_items: '{{ users_list }}'
 
 - name: Make users passwordless for sudo in group wheel
-  lineinfile:
+  tags: config_sudoers
+  when: ansible_distribution == "Centos"
+  ansible.builtin.lineinfile:
     path: /etc/sudoers
     state: present
     regexp: '^%wheel'
     line: '%wheel ALL=(ALL) NOPASSWD: ALL'
     validate: 'visudo -cf %s'
+
+- name: Make users passwordless for sudo in group sudo
   tags: config_sudoers
+  when: ansible_distribution == "Ubuntu"
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers
+    state: present
+    regexp: '^%sudo'
+    line: '%sudo ALL=(ALL) NOPASSWD: ALL'
+    validate: 'visudo -cf %s'

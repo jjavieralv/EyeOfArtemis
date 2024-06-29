@@ -1,32 +1,35 @@
 ---
-- include_vars: vars/ssh.yml
+- name: Include ssh vars
   tags: always
+  ansible.builtin.include_vars: vars/ssh.yml
 
 - name: Upload authorized key
-  authorized_key:
-    user: "{{ssh_user}}"
-    key: "{{ lookup('file','../files/' + ssh_user + '.pub') }}"
-    state: present
   tags: ssh_copy
+  ansible.posix.authorized_key:
+    user: "{{ ssh_user }}"
+    key: "{{ lookup('file', '../files/' + ssh_user + '.pub') }}"
+    state: present
+  
 
 - name: Disable root login
-  lineinfile:
+  tags: ssh_config
+  notify:
+    - Restart ssh
+  ansible.builtin.lineinfile:
     dest: /etc/ssh/sshd_config
     regexp: '^.?PermitRootLogin'
     line: "PermitRootLogin no"
     state: present
-    backup: yes
-  tags: ssh_config
-  notify:
-    - restart ssh
+    backup: true
+
 
 - name: Enable PubkeyAuthentication
-  lineinfile:
+  tags: ssh_config
+  notify:
+    - Restart ssh
+  ansible.builtin.lineinfile:
     dest: /etc/ssh/sshd_config
     regexp: '#PubkeyAuthentication'
     line: "PubkeyAuthentication yes"
     state: present
-    backup: yes
-  tags: ssh_config
-  notify:
-    - restart ssh
+    backup: true

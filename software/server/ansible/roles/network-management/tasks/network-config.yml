@@ -1,0 +1,6 @@
+---
+
+- name: Include vars network-config
+  tags: always
+  ansible.builtin.include_vars:
+    file: vars/network-config.yml

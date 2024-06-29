@@ -1,6 +1,14 @@
 ---
 # handlers file for server-management
-- name: restart ssh
-  service:
+
+- name: Restart ssh
+  when: ansible_distribution == "Centos"
+  ansible.builtin.service:
     name: sshd
+    state: restarted
+
+- name: Restart ssh
+  when: ansible_distribution == "Ubuntu"
+  ansible.builtin.service:
+    name: ssh
     state: restarted

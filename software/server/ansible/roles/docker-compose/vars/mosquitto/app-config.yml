@@ -2,7 +2,9 @@ mosquitto:
   listener: 1883
   protocol: mqtt
   users:
+    #0 will be the admin user
     - username: admin
       password: perrete
+    #1 will be the frigate user
     - username: frigate
       password: perrete_frigate

@@ -1,37 +1,54 @@
 mqtt:
-  host: 172.21.0.2
-  user: frigate
-  password: toor
+  host: mosquitto
+  user: {{mosquitto.users[1].username}}
+  password: {{mosquitto.users[1].password}}
   topic_prefix: frigate
+  port: {{mosquitto.listener}}
+
 detectors:
-  cpu1:
-    type: cpu
+  #cpu1:
+  #  type: cpu
+  coral:
+    type: edgetpu
+    device: pci:0
+
+#detect:
+#  enabled: false
+#  width: 640
+#  height: 352
+#  fps: 5
+
+
+# I had to install 
+# ``` sudo apt install i965-va-driver vainfo libva-glx2 libva-drm2 ffmpeg ```
+# ``` export LIBVA_DRIVER_NAME=i965 ```
+# check what can I use ```ffmpeg -hide_banner -hwaccels```
+# It could be different on other systems
+#
+ffmpeg:
+  hwaccel_args:
+    - -hwaccel
+    - vaapi
+    - -hwaccel_device
+    - /dev/dri/renderD128
+    - -hwaccel_output_format
+    - vaapi_moco
+
+
+record:
+  enabled: false
+
+snapshots:
+  enabled: false
+
+birdseye:
+  enabled: true
+  mode: continuous
+
+
 cameras:
-  camera_1:
-    ffmpeg:
-      inputs:
-        #- path: http://192.168.1.139:81
-        - path: rtsp://192.168.1.164/mpeg4/media.amp
-          roles:
-            - detect
-            - record
-              #      input_args: -avoid_negative_ts make_zero -fflags nobuffer -flags low_delay -strict experimental -fflags +genpts+discardcorrupt -use_wallclock_as_timestamps 1 -c:v mjpeg
-              #      output_args:
-              #record: -f segment -segment_time 10 -segment_format mp4 -reset_timestamps 1 -strftime 1 -c:v libx264 -an
-        #rtmp: -c:v libx264 -an -f flv
-    record:
-      enabled: true
-      retain_days: 0
-      events:
-        retain:
-          default: 5
-    rtmp:
-      enabled: false
-    motion:
-      mask:
-        - 1245,23,1280,720,97,720,66,0
-    objects:
-      filters:
-        person:
-          mask:
-            - 1245,23,1280,720,97,720,66,0
+{% for camera_file in lookup('fileglob', 'cameras/*.yml', wantlist=True) %}
+{% set camera_content = lookup('file', camera_file) %}
+  {{camera_content | indent(2) }}
+{% endfor %}
+

@@ -1,14 +1,27 @@
 ---
-- name: compose up
-  become_user: "{{dockercompose_user}}"
+- name: compose up  
+  # become_user: "{{ dockercompose_user }}"
   become: true
-  shell:
-    cmd: "docker compose up --detach"
+  ansible.builtin.command:
+    argv: 
+      - "docker"
+      - "compose"
+      - "up"
+      - "--detach"
+  args:
     chdir: "{{ docker_compose.project.path }}"
 
 - name: compose down
-  become_user: "{{dockercompose_user}}"
+  # become_user: "{{dockercompose_user}}"
   become: true
   shell:
     cmd: "docker compose down"
+    chdir: "{{ docker_compose.project.path }}"
+
+# Some hwcel boards stops working when restart, thats why we do down and up
+- name: compose restart
+  # become_user: "{{ dockercompose_user }}"
+  become: true
+  shell:
+    cmd: "docker compose down ; docker compose up --detach"
     chdir: "{{ docker_compose.project.path }}"
