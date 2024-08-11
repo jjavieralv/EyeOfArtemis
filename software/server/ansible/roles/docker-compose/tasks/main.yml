@@ -30,7 +30,7 @@
   tags:
     - frigate
 
-- name: Hello world docker
+- name: Hello world docker (become testing function)
   ansible.builtin.import_tasks:
     file: hello.yml
   become_user: "{{ dockercompose_user }}"

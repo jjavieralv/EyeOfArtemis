@@ -106,7 +106,6 @@ Tags to manage this role:
   - **down**: Stop service
   - **restart**: Restart service
 
-
 ## 1.3. Bibliography
 
 Originally forked from <https://github.com/iMartzen/ansible-role-centos-docker-compose-setup/tree/master>

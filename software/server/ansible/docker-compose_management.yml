@@ -1,5 +1,5 @@
 ---
-- name: Config server
+- name: Docker compose management
   hosts: all
   gather_facts: true
 

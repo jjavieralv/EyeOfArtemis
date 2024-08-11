@@ -1,1 +1,3 @@
+## This user will be used to manage ansible interactions with the server
+## I recommend keep it as ansible
 ssh_user: ansible

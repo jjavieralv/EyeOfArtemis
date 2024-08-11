@@ -194,7 +194,7 @@ sudo apt install openssh-server -y
 
 ### Centos
 
-I strongly recommend you **NOT** to use it because there are hardware failures when you use CentOS
+I strongly recommend you **NOT** to use it because there are hardware issues when you use CentOS
 
 #### Create instalation device
 

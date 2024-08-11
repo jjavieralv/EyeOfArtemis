@@ -1,4 +1,4 @@
-- name: Network config
+- name: Network management
   hosts: all
   gather_facts: true
   vars:

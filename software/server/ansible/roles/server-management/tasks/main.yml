@@ -4,7 +4,7 @@
 - name: Check if this is first execution
   tags: first-execution
   ansible.builtin.debug:
-    msg: "This is first execution"
+    msg: "First interaction detected"
 
 - name: Users and Groups management
   tags:

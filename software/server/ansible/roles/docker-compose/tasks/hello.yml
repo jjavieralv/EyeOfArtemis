@@ -1,9 +1,18 @@
 ---
+- name: Testing function
+  # become_user: "{{ dockercompose_user }}"
+  # become: true
+  ansible.builtin.command:
+    argv:
+      - "whoami"
+      - ";"
+      - "docker"
+      - "run"
+      - "hello-world"
+    register: test-log-function
+    ignore_errors: true
 
-- shell: |
-    whoami; docker run hello-world
-  register: perrete
-  ignore_errors: true
-
-- debug:
-    var: perrete
+- name: Print the log of the test function
+  tags: always
+  ansible.builtin.debug:
+    var: test-log-function

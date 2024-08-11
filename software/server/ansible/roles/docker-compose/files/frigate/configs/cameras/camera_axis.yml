@@ -17,8 +17,8 @@ camera_axis:
     # Resolution for object detection
     width: 640
     height: 480
-    # Frames per second for object detection
-    fps: 2
+    # Frames per second for object detection (in jsmpeg linked to fps motion)
+    fps: 20
     # Object detection is enabled
     enabled: True
   # Objects to track

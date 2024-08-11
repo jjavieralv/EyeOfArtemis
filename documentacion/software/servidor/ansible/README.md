@@ -25,7 +25,7 @@ continue pressing enter without setting any pass to be passwordless
 
 Copy the file ansible.pub(```shell echo $HOME/.ssh/ansible.pub``` ) to roles/server-management/files
 
-This will config the server ready to continue using certs authentication
+This will config the server ready to continue using certs authentication instead of password.
 
 ```shell
 ansible-playbook -i {your_inventory} -t first-execution,groups,users,config_sudoers,ssh_copy,ssh_config,energy -k --ask-become-pass server_management.yml
