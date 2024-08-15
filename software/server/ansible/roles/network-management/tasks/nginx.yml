@@ -1,5 +1,4 @@
 ---
-
 - name: Include NGINX vars
   tags: always
   ansible.builtin.include_vars:
@@ -16,10 +15,19 @@
 - name: Copy nginx files
   tags: always
   loop: "{{ lookup('ansible.builtin.fileglob', 'files/nginx/*', wantlist=True) | reject('search', '.j2$') | list }}"
+  loop_control:
+    loop_var: nginx_files
   ansible.builtin.copy:
-    src: "files/nginx/{{ item }}"
-    dest: "/etc/nginx/{{ item }}"
-    mode: '0644'
+    src: "{{ nginx_files }}"
+    dest: "/etc/nginx/{{ nginx_files }}"
+    mode: "0644"
+
+- name: Copy frigate config config
+  ansible.builtin.template:
+    src: "files/nginx/{{ item | basename }}"
+    dest: "/etc/nginx/{{ item | basename | splitext | first }}"
+    mode: "0644"
+  loop: "{{ lookup('ansible.builtin.fileglob', 'frigate/configs/*', wantlist=True) }}"
 
 - name: Apply nginx templates
   tags: always
@@ -27,4 +35,4 @@
   ansible.builtin.template:
     src: "files/nginx/{{ item }}"
     dest: "/etc/nginx/{{ item | splitext | first }}"
-    mode: '0644'
+    mode: "0644"

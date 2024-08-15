@@ -3,7 +3,7 @@
   # become_user: "{{ dockercompose_user }}"
   become: true
   ansible.builtin.command:
-    argv: 
+    argv:
       - "docker"
       - "compose"
       - "up"

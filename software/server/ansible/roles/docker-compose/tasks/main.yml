@@ -31,9 +31,7 @@
     - frigate
 
 - name: Hello world docker (become testing function)
-  ansible.builtin.import_tasks:
+  ansible.builtin.include_tasks:
     file: hello.yml
-  become_user: "{{ dockercompose_user }}"
-  become: true
   tags:
     - hello
