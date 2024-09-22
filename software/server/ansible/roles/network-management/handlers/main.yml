@@ -1,6 +1,2 @@
 ---
 # handlers file for network-management
-- name: restart nginx
-  service:
-    name: nginx
-    state: restarted

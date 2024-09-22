@@ -25,11 +25,10 @@
       ansible.builtin.debug:
         msg: "Down frigate..."
       changed_when: true
-      notify: 'compose down'
+      notify: "compose down"
 
     - name: Flush handlers
-      ansible.builtin.meta:
-        free_form: flush_handlers
+      ansible.builtin.meta: flush_handlers
 
     - name: Delete configs
       loop:
@@ -51,26 +50,44 @@
         path: "{{ item }}"
         state: directory
         owner: "{{ dockercompose_user }}"
-        mode: '0755'
+        mode: "0755"
+
+    - name: Ensure directory structure exists
+      ansible.builtin.file:
+        path: "{{ main_paths.config.path }}/{{ item.path }}"
+        state: directory
+        mode: "0755"
+        owner: "{{ dockercompose_user }}"
+      with_community.general.filetree: "files/frigate/configs/"
+      when: item.state == 'directory'
+
+    - name: Ensure files are populated from templates
+      ansible.builtin.template:
+        src: "{{ item.src }}"
+        dest: '{{ main_paths.config.path }}/{{ item.path | regex_replace("\.j2$", "") }}'
+        mode: "0644"
+        owner: "{{ dockercompose_user }}"
+      with_community.general.filetree: "files/frigate/configs/"
+      when: item.state == 'file'
 
     - name: Copy frigate docker_compose template
       ansible.builtin.template:
         src: "files/frigate/docker-compose/docker-compose.yml.j2"
         dest: "{{frigate_main.path}}/docker-compose/docker-compose.yml"
         owner: "{{ dockercompose_user }}"
-        mode: '0644'
+        mode: "0644"
 
     - name: Import Mosquitto users
       ansible.builtin.include_vars:
         dir: mosquitto
         name: app-config.yml
 
-    - name: Copy frigate config config
-      ansible.builtin.template:
-        src: "files/frigate/configs/{{ item | basename }}"
-        dest: "{{ main_paths.config.path}}/{{ item | basename | splitext | first }}"
-        mode: '0644'
-      loop: "{{ lookup('ansible.builtin.fileglob', 'frigate/configs/*', wantlist=True) }}"
+    #- name: Copy frigate config config
+    #  ansible.builtin.template:
+    #    src: "files/frigate/configs/{{ item | basename }}"
+    #    dest: "{{ main_paths.config.path}}/{{ item | basename | splitext | first }}"
+    #    mode: '0644'
+    #  loop: "{{ lookup('ansible.builtin.fileglob', 'frigate/configs/*', wantlist=True) }}"
 
 ##################
 # Manage Frigate #
@@ -87,12 +104,15 @@
   ansible.builtin.debug:
     msg: "Down frigate..."
   changed_when: true
-  notify: 'compose down'
+  notify: "compose down"
   tags: down
 
 - name: Docker compose frigate restart
   ansible.builtin.debug:
     msg: "restart frigate..."
   changed_when: true
-  notify: 'compose restart'
+  notify: "compose restart"
   tags: restart
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers

@@ -15,7 +15,7 @@ environment_values:
 
 ## Network
 ports:
-  - "5000:5000"
+  - "5050:5000"
   - "8554:8554" # RTSP feeds
   - "8555:8555/tcp" # WebRTC over tcp
   - "8555:8555/udp" # WebRTC over udp
@@ -33,7 +33,7 @@ main_paths:
   media:
     path: "{{ frigate_main.path }}/media"
   config:
-    path: "{{ frigate_main.path }}/config"
+    path: "{{ frigate_main.path }}/configs"
     filename: "config.yml"
   database:
     path: "{{ frigate_main.path }}/db/"
