@@ -12,7 +12,9 @@ services:
       - /dev/dri/renderD128 # for intel hwaccel, needs to be updated for your hardware
     volumes:
       - /etc/localtime:/etc/localtime:ro
-      - {{ main_paths.config.path }}/{{ main_paths.config.filename }}:/config/config.yml
+      - type: bind
+        source: {{ main_paths.config.path }}/{{ main_paths.config.filename }}
+        target: /config/config.yml
       - {{ main_paths.media.path }}:/media/frigate
       - type: {{ main_paths.cache.type }}
         target: {{ main_paths.cache.target }}
@@ -26,7 +28,7 @@ services:
   {% endfor %}
   {% endif %}
 
-  {%- if environment is defined -%}
+  {%- if environment_values is defined -%}
   environment:
   {% for key in environment_values %}
     - {{ key }}={{ environment_values[key] }}

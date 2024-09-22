@@ -1,0 +1,21 @@
+## Docker compose settings
+image:
+  name: nginx
+  version: latest
+container_name: nginx
+privileged: false
+restart: unless-stopped
+
+ports:
+  - 7480:7480
+
+nginx_main:
+  path: "{{ dockercompose.path }}/nginx"
+
+main_paths:
+  config:
+    path: "{{ nginx_main.path }}/configs"
+
+docker_compose:
+  project:
+    path: "{{ nginx_main.path }}/docker-compose"

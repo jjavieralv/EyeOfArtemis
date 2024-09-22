@@ -1,0 +1,98 @@
+---
+###############
+# Config vars #
+###############
+- name: Include nginx vars
+  ansible.builtin.include_vars:
+    dir: nginx
+    extensions:
+      - yml
+  tags: always
+
+##################
+# Config NGINX #
+##################
+
+- name: Delete Nginx
+  tags: delete
+  block:
+    - name: Docker compose nginx down
+      ansible.builtin.debug:
+        msg: "Down nginx..."
+      changed_when: true
+      notify: "compose down"
+
+    - name: Flush handlers
+      ansible.builtin.meta: flush_handlers
+
+    - name: Delete configs
+      loop:
+        - "{{ nginx_main.path }}"
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: absent
+
+- name: Config nginx
+  tags: config
+  block:
+    - name: Create nginx dirs
+      loop:
+        - "{{ nginx_main.path }}"
+        - "{{ main_paths.config.path }}"
+        - "{{ docker_compose.project.path }}"
+      ansible.builtin.file:
+        path: "{{ item }}"
+        state: directory
+        owner: "{{ dockercompose_user }}"
+        mode: "0755"
+
+    - name: Copy nginx docker_compose template
+      ansible.builtin.template:
+        src: "files/nginx/docker-compose/docker-compose.yml.j2"
+        dest: "{{ docker_compose.project.path }}/docker-compose.yml"
+        owner: "{{ dockercompose_user }}"
+        mode: "0644"
+
+    - name: Ensure directory structure exists
+      ansible.builtin.file:
+        path: "{{ main_paths.config.path }}/{{ item.path }}"
+        state: directory
+        mode: "0755"
+      with_community.general.filetree: "files/nginx/configs/"
+      when: item.state == 'directory'
+
+    - name: Ensure files are populated from templates
+      ansible.builtin.template:
+        src: "{{ item.src }}"
+        dest: "{{ main_paths.config.path }}/{{ item.path }}"
+        mode: "0755"
+      with_community.general.filetree: "files/nginx/configs/"
+      when: item.state == 'file'
+
+##################
+# Manage Frigate #
+##################
+
+- name: Docker compose nginx up
+  ansible.builtin.debug:
+    msg: "Up nginx..."
+  changed_when: true
+  notify: compose up
+  tags: up
+
+- name: Docker compose nginx down
+  ansible.builtin.debug:
+    msg: "Down nginx..."
+  changed_when: true
+  notify: "compose down"
+  tags: down
+
+- name: Docker compose nginx restart
+  ansible.builtin.debug:
+    msg: "restart nginx..."
+  changed_when: true
+  notify: "compose restart"
+  tags: restart
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers

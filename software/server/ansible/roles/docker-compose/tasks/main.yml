@@ -30,6 +30,16 @@
   tags:
     - frigate
 
+- name: Manage Nginx
+  ansible.builtin.include_tasks:
+    file: nginx/main.yml
+  args:
+    apply:
+      # become_user: "{{ dockercompose_user }}"
+      become: true
+  tags:
+    - nginx
+
 - name: Hello world docker (become testing function)
   ansible.builtin.include_tasks:
     file: hello.yml

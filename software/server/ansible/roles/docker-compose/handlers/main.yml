@@ -1,5 +1,16 @@
 ---
-- name: compose up  
+- name: Compose down
+  # become_user: "{{dockercompose_user}}"
+  become: true
+  ansible.builtin.command:
+    argv:
+      - "docker"
+      - "compose"
+      - "down"
+    chdir: "{{ docker_compose.project.path }}"
+  listen: "compose down"
+
+- name: Compose up
   # become_user: "{{ dockercompose_user }}"
   become: true
   ansible.builtin.command:
@@ -8,20 +19,25 @@
       - "compose"
       - "up"
       - "--detach"
-  args:
     chdir: "{{ docker_compose.project.path }}"
-
-- name: compose down
-  # become_user: "{{dockercompose_user}}"
-  become: true
-  shell:
-    cmd: "docker compose down"
-    chdir: "{{ docker_compose.project.path }}"
+  listen: "compose up"
 
 # Some hwcel boards stops working when restart, thats why we do down and up
-- name: compose restart
-  # become_user: "{{ dockercompose_user }}"
+
+- name: Compose restart
   become: true
-  shell:
-    cmd: "docker compose down ; docker compose up --detach"
-    chdir: "{{ docker_compose.project.path }}"
+  # become_user: "{{ dockercompose_user }}"
+  block:
+    - name: Docker compose nginx restart 1/2 DOWN
+      ansible.builtin.debug:
+        msg: "Down nginx..."
+      notify: "compose down"
+      changed_when: true
+      listen: "compose restart"
+
+    - name: Docker compose nginx restart 2/2 UP
+      ansible.builtin.debug:
+        msg: "up nginx..."
+      notify: "compose up"
+      changed_when: true
+      listen: "compose restart"

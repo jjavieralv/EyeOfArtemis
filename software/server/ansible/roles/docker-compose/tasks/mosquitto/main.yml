@@ -21,11 +21,10 @@
       ansible.builtin.debug:
         msg: "Down mosquitto..."
       changed_when: true
-      notify: 'compose down'
+      notify: "compose down"
 
     - name: Flush handlers
-      ansible.builtin.meta:
-        free_form: flush_handlers
+      ansible.builtin.meta: flush_handlers
 
     - name: Delete configs
       loop:
@@ -45,29 +44,26 @@
         path: "{{ item }}"
         state: directory
         owner: "{{ dockercompose_user }}"
-        mode: '0766'
-
+        mode: "0766"
 
     - name: Copy mosquitto docker_compose template
       ansible.builtin.template:
         src: files/mosquitto/docker-compose/docker-compose.yml.j2
         dest: "{{ mosquitto_main.path }}/docker-compose/docker-compose.yml"
         owner: "{{ dockercompose_user }}"
-        mode: '0766'
+        mode: "0766"
 
     - name: Copy mosquitto config template
       ansible.builtin.template:
         src: "files/mosquitto/configs/{{ item | basename }}"
         dest: "{{ main_paths.config.path }}/{{ item | basename | splitext | first }}"
         owner: "{{ dockercompose_user }}"
-        mode: '0644'
+        mode: "0644"
       loop: "{{ lookup('ansible.builtin.fileglob', 'mosquitto/configs/*', wantlist=True) }}"
-
 
 ####################
 # Manage Mosquitto #
 ####################
-
 
 - name: Docker compose mosquitto up
   ansible.builtin.debug:
@@ -80,12 +76,15 @@
   ansible.builtin.debug:
     msg: "Down mosquitto..."
   changed_when: true
-  notify: 'compose down'
+  notify: "compose down"
   tags: down
 
 - name: Docker compose mosquitto restart
   ansible.builtin.debug:
     msg: "restart mosquitto..."
   changed_when: true
-  notify: 'compose restart'
+  notify: "compose restart"
   tags: restart
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers

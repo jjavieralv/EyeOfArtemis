@@ -1,0 +1,28 @@
+version: "3.9"
+services:
+  nginx:
+    container_name: {{ container_name }}
+    privileged: {{ privileged }}
+    restart: {{ restart }}
+    image: {{ image.name }}:{{ image.version }}
+
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - {{ main_paths.config.path }}/sites-enabled:/etc/nginx/sites-enabled
+      - {{ main_paths.config.path }}/nginx.conf:/etc/nginx/nginx.conf
+      - {{ main_paths.config.path }}/passwords/:/etc/nginx/passwords
+      - {{ main_paths.config.path }}/html:/var/www/html
+
+  {% if ports is defined %}
+  ports:
+  {% for port in ports %}
+    - {{ port }}
+  {% endfor %}
+  {% endif %}
+
+  {%- if environment_values is defined -%}
+  environment:
+  {% for key in environment_values %}
+    - {{ key }}={{ environment_values[key] }}
+  {% endfor %}
+  {% endif %}
