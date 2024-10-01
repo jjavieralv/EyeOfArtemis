@@ -2,8 +2,9 @@
 image:
   name: ghcr.io/blakeblackshear/frigate
   version: "stable"
-privileged: 'true'
-restart: 'unless-stopped'
+  pull_policy: always
+privileged: "true"
+restart: "unless-stopped"
 container_name: frigate
 
 ## Environment
@@ -11,7 +12,6 @@ container_name: frigate
 environment_values:
   FRIGATE_RTSP_PASSWORD: "password"
   LIBVA_DRIVER_NAME: i965
-
 
 ## Network
 ports:
@@ -40,7 +40,7 @@ main_paths:
     filename: "databases.db"
   cache:
     type: tmpfs
-    target: '/tmp/frigate_cache'
+    target: "/tmp/frigate_cache"
     size: 1000000000
 
 media_subpaths:

@@ -5,6 +5,9 @@ services:
     privileged: {{ privileged }}
     restart: {{ restart }}
     image: {{ image.name }}:{{ image.version }}
+    {% if image.pull_policy is defined -%}
+    pull_policy: {{ image.pull_policy }}
+    {% endif %}
 
     volumes:
       - /etc/localtime:/etc/localtime:ro

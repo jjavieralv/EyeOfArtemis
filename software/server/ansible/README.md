@@ -105,6 +105,12 @@ Tags to manage this role:
   - **up**: Start service
   - **down**: Stop service
   - **restart**: Restart service
+- **NGINX**: manage mosquito service infra
+  - **config**: set up NGINX config
+  - **delete**: remove all NGINX configs
+  - **up**: Start service
+  - **down**: Stop service
+  - **restart**: Restart service
 
 ## 1.3. Bibliography
 

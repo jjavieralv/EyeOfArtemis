@@ -2,6 +2,7 @@
 image:
   name: nginx
   version: latest
+  pull_policy: always
 container_name: nginx
 privileged: false
 restart: unless-stopped

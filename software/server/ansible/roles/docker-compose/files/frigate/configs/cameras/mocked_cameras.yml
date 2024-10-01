@@ -1,0 +1,28 @@
+mocked_camera_1:
+  ffmpeg:
+    inputs:
+      - path: rtsp://192.168.1.179:9000/mocked_stream1
+mocked_camera_2:
+  ffmpeg:
+    inputs:
+      - path: rtsp://192.168.1.179:9000/mocked_stream1
+mocked_camera_3:
+  ffmpeg:
+    inputs:
+      - path: rtsp://192.168.1.179:9000/mocked_stream1
+#mocked_camera_4:
+#  ffmpeg:
+#    inputs:
+#      - path: rtsp://192.168.1.179:9000/mocked_stream1
+#mocked_camera_5:
+#  ffmpeg:
+#    inputs:
+#      - path: rtsp://192.168.1.179:9000/mocked_stream1
+#mocked_camera_6:
+#  ffmpeg:
+#    inputs:
+#      - path: rtsp://192.168.1.179:9000/mocked_stream1
+#mocked_camera_7:
+#  ffmpeg:
+#    inputs:
+#      - path: rtsp://192.168.1.179:9000/mocked_stream1

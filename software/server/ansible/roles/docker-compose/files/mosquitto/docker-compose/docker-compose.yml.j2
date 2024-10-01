@@ -1,6 +1,10 @@
 services:
   mosquitto:
     image: {{ image.name }}:{{ image.version }}
+    {% if image.pull_policy is defined -%}
+    pull_policy: {{ image.pull_policy }}
+    {% endif %}
+
     restart: {{restart}}
     container_name: {{ container_name}}
     {% if configs is defined -%}

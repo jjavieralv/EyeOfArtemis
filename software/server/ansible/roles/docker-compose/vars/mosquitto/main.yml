@@ -2,6 +2,7 @@
 image:
   name: docker.io/eclipse-mosquitto
   version: 2.0.15
+  pull_policy: always
 container_name: broker_test
 restart: unless-stopped
 
@@ -9,7 +10,7 @@ configs:
   mosquitto_users: /mosquitto_users
   mosquitto_config: /mosquitto_config
 
-entrypoint: 'mosquitto -c {{ configs.mosquitto_config }}'
+entrypoint: "mosquitto -c {{ configs.mosquitto_config }}"
 
 mosquitto_main:
   path: "{{ dockercompose.path }}/mosquitto"
