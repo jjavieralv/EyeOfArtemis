@@ -99,90 +99,90 @@ This is needed because it sets the path to find the server from outside
    2. Find your Gateway config. You can find it using ```shell route -n```
 4. Set your static IP, Gateway and DNS. To do this, we will create a file on /etc/netplan/ that will be used as template. It MUST HAS .YAML extension
 
+```shell
+echo '
+network:
+version: 2
+renderer: networkd
+#if you are using ubuntu desktop probably you need to change renderer to
+#renderer: NetworkManager
+ethernets:
+  {your_interface_name}:
+    addresses:
+      - {your_interface_ip}/{your_interface_mask}
+    routes:
+      - to: default
+        via: {your_gateway_ip}
+    nameservers:
+        addresses: [{your_dns1_ip}, {your_dnsx_ip}]' | sudo tee /etc/netplan/01-default.yaml > /dev/null
+sudo chmod 600 /etc/netplan/01-default.yaml
+```
 
-    ```shell
-    sudo echo '
-    network:
-    version: 2
-    renderer: networkd
-    #if you are using ubuntu desktop probably you need to change renderer to
-    #renderer: NetworkManager
-    ethernets:
-      {your_interface_name}:
-        addresses:
-          - {your_interface_ip}/{your_interface_mask}
-        routes:
-          - to: default
-            via: {your_gateway_ip}
-        nameservers:
-            addresses: [{your_dns1_ip}, {your_dnsx_ip}]' >/etc/netplan/01-default.yaml
-    ```
+Example
+```shell
+echo '
+network:
+  version: 2
+  renderer: networkd
+  ethernets:
+    enp2s0:
+      addresses:
+        - 192.168.1.30/24
+      routes:
+        - to: default
+          via: 192.168.1.1
+      nameservers:
+          addresses: [1.1.1.1, 8.8.8.8, 4.4.4.4]' | sudo tee /etc/netplan/01-default.yaml > /dev/null
+sudo chmod 600 /etc/netplan/01-default.yaml
+```
 
-    Example
+Example with eth and wifi as backup
 
-    ```shell
-    sudo echo '
-    network:
-      version: 2
-      renderer: networkd
-      ethernets:
-        enp2s0:
-          addresses:
-            - 192.168.1.30/24
-          routes:
-            - to: default
-              via: 192.168.1.1
-          nameservers:
-              addresses: [1.1.1.1, 8.8.8.8, 4.4.4.4]' >/etc/netplan/01-default.yaml
-    ```
-
-    Example with eth and wifi as backup
-
-    ```shell
-    network:
-    version: 2
-    renderer: networkd
-    ethernets:
-      enp2s0:
-        dhcp4: no
-        addresses:
-          - 192.168.1.30/24
-        routes:
-          - to: default
-            via: 192.168.1.1
-            metric: 100
-        nameservers:
-          addresses: [8.8.8.8, 8.8.4.4]
-    wifis:
-      wlxb0487a8d1bad:
-        dhcp4: no
-        access-points:
-          "wifi_ssid":
-            password: "********"
-        addresses:
-          - 192.168.1.30/24
-        routes:
-          - to: default
-            via: 192.168.1.1
-            metric: 200
-        nameservers:
-          addresses: [8.8.8.8, 8.8.4.4]
-    ```
+```shell
+network:
+version: 2
+renderer: networkd
+ethernets:
+  enp2s0:
+    dhcp4: no
+    addresses:
+      - 192.168.1.30/24
+    routes:
+      - to: default
+        via: 192.168.1.1
+        metric: 100
+    nameservers:
+      addresses: [8.8.8.8, 8.8.4.4]
+wifis:
+  wlxb0487a8d1bad:
+    dhcp4: no
+    access-points:
+      "wifi_ssid":
+        password: "********"
+    addresses:
+      - 192.168.1.30/24
+    routes:
+      - to: default
+        via: 192.168.1.1
+        metric: 200
+    nameservers:
+      addresses: [8.8.8.8, 8.8.4.4]
+```
 
 5. Apply your config
 
-    ```shell
-    sudo netplan apply
-    ```
+```shell
+sudo netplan apply
+```
 
-    Sometimes you neet to reboot here. Sometimes you must execute this command several times (I got error with Networkd service at first time)
+Sometimes you neet to reboot here. Sometimes you must execute this command several times (I got error with Networkd service at first time)
 
 
 6. Check iff the config has been updated correctly
 
-    ```shell
-    ip a    
-    ```
+```shell
+ip a    
+```
 
 ##### Install openSSH
 
