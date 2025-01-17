@@ -15,7 +15,7 @@
         - [Network config](#network-config)
           - [Set static IP](#set-static-ip)
         - [Install openSSH](#install-openssh)
-    - [Centos](#centos)
+    - [Centos (Legacy dont use)](#centos-legacy-dont-use)
       - [Create instalation device](#create-instalation-device-1)
       - [Install Centos Stream 9](#install-centos-stream-9)
       - [Config SO](#config-so-1)
@@ -192,7 +192,7 @@ Just if you didnt added it during instalation process
 sudo apt install openssh-server -y
 ```
 
-### Centos
+### Centos (Legacy dont use)
 
 I strongly recommend you **NOT** to use it because there are hardware issues when you use CentOS
 
