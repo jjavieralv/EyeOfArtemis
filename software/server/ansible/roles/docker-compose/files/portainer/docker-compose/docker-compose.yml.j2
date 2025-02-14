@@ -1,0 +1,59 @@
+
+{% set ns = namespace(has_volume_type=false) %}
+{% for volume in volumes %}
+  {% set main_key = (volume.keys() | list)[0] %}
+  {% if volume[main_key].type == 'volume' %}
+    {% set ns.has_volume_type = true %}
+  {% endif %}
+{% endfor %}
+
+version: "0.1"
+services:
+  portainer:
+    container_name: {{ container_name }}
+    privileged: {{ privileged }}
+    restart: {{ restart }}
+    image: {{ image.name }}:{{ image.version }}
+    {% if image.pull_policy is defined -%}
+    pull_policy: {{ image.pull_policy }}
+    {% endif %}
+
+{% if ns.has_volume_type %}
+    volumes:
+{% for volume in volumes %}
+{% set main_key = (volume.keys() | list)[0] %}
+{% if volume[main_key].type == 'volume' %}
+    - {{ main_key }}:{{ volume[main_key].target }}
+{% elif volume[main_key].type == 'bind' %}
+      - type: bind
+        source: {{ volume[main_key].source }}
+        target: {{ volume[main_key].target }}
+  {% endif %}
+{% endfor %}
+{% endif %}
+
+    command: --admin-password '{{ admin_password | encrypt_password_htpasswd_fixeddollar }}'
+
+  {% if ports is defined %}
+  ports:
+  {% for port in ports %}
+    - {{ port }}
+  {% endfor %}
+  {% endif %}
+
+  {%- if environment_values is defined -%}
+  environment:
+  {% for key in environment_values %}
+    - {{ key }}={{ environment_values[key] }}
+  {% endfor %}
+  {% endif %}
+
+{% if ns.has_volume_type %}
+volumes:
+{% for volume in volumes %}
+{% set main_key = (volume.keys() | list)[0] %}
+{% if volume[main_key].type == 'volume' %}
+  {{ main_key }}:
+{% endif %}
+{% endfor %}
+{% endif %}

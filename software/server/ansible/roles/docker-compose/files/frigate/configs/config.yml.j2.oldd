@@ -1,0 +1,61 @@
+mqtt:
+  host: mosquitto
+  user: frigate
+  password: perrete_frigate
+  topic_prefix: frigate
+  port: 1883
+
+detectors:
+  #cpu1:
+  #  type: cpu
+  coral:
+    type: edgetpu
+    device: pci:0
+
+#detect:
+#  enabled: false
+#  width: 640
+#  height: 352
+#  fps: 5
+
+
+# I had to install 
+# ``` sudo apt install i965-va-driver vainfo libva-glx2 libva-drm2 ffmpeg ```
+# ``` export LIBVA_DRIVER_NAME=i965 ```
+# check what can I use ```ffmpeg -hide_banner -hwaccels```
+# It could be different on other systems
+#
+ffmpeg:
+  hwaccel_args:
+    - -hwaccel
+    - vaapi
+    - -hwaccel_device
+    - /dev/dri/renderD128
+    - -hwaccel_output_format
+    - yuv420p
+
+
+
+record:
+  enabled: false
+
+snapshots:
+  enabled: false
+
+birdseye:
+  enabled: true
+  mode: continuous
+
+#go2rtc:
+#  streams:
+#    camera_axis: rtsp://192.168.1.130/mpeg4/media.amp
+
+cameras:
+  camera_axis:
+    # FFmpeg settings for video stream processing
+    ffmpeg:
+      inputs:
+        # The path to the video stream
+        - path: rtsp://192.168.1.130/mpeg4/media.amp
+
+

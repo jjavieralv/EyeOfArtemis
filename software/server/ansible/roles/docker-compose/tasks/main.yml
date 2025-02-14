@@ -40,6 +40,16 @@
   tags:
     - nginx
 
+- name: Manage portainer
+  ansible.builtin.include_tasks:
+    file: portainer/main.yml
+  args:
+    apply:
+      # become_user: "{{ dockercompose_user }}"
+      become: true
+  tags:
+    - portainer
+
 - name: Hello world docker (become testing function)
   ansible.builtin.include_tasks:
     file: hello.yml

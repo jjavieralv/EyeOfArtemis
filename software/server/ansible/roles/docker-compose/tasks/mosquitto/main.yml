@@ -19,9 +19,9 @@
   block:
     - name: Docker compose mosquitto down
       ansible.builtin.debug:
-        msg: "Down mosquitto..."
+        msg: "Down frigate with delete..."
       changed_when: true
-      notify: "compose down"
+      notify: "compose down delete"
 
     - name: Flush handlers
       ansible.builtin.meta: flush_handlers

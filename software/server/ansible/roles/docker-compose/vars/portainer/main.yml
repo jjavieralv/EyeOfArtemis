@@ -1,0 +1,54 @@
+## Docker compose settings
+image:
+  name: portainer/portainer-ce
+  version: latest
+  pull_policy: always
+container_name: portainer
+privileged: false
+restart: always
+
+ports:
+  - 5000:8000
+  - 5443:9443
+
+# Its just the password of the htpapasswd (user:password)
+# you have in the documentation how to generate it
+# it only can be set when you create the instance (and the volume)
+admin_password: "holaholahola"
+
+## Environment
+#Add all environment values you want to use in container
+#environment_values:
+
+portainer_main:
+  path: "{{ dockercompose.path }}/portainer"
+
+main_paths:
+  config:
+    path: "{{ portainer_main.path }}/configs"
+
+docker_compose:
+  project:
+    path: "{{ portainer_main.path }}/docker-compose"
+
+volumes:
+  - localtime:
+      type: bind
+      source: /etc/localtime
+      target: /etc/localtime
+      mode: ro
+  - db_data:
+      type: volume
+      target: /data
+      #options:
+      #  driver: local # Define the driver and options under the volume name
+      #  driver_opts:
+      #    type: none
+      #    device: /data/db_data
+      #    o: bind
+
+  - docker:
+      type: bind
+      source: /var/run/docker.sock
+      target: /var/run/docker.sock
+#-v /var/run/docker.sock:/var/run/docker.sock -v portainer_data:/data

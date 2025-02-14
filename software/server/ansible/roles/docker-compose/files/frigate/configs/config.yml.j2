@@ -5,12 +5,12 @@ mqtt:
   topic_prefix: frigate
   port: {{mosquitto.listener}}
 
-detectors:
+#detectors:
   #cpu1:
   #  type: cpu
-  coral:
-    type: edgetpu
-    device: pci:0
+  #coral:
+  #  type: edgetpu
+  #  device: pci:0
 
 #detect:
 #  enabled: false
@@ -25,15 +25,16 @@ detectors:
 # check what can I use ```ffmpeg -hide_banner -hwaccels```
 # It could be different on other systems
 #
+#ffmpeg:
+#  hwaccel_args:
+#    - -hwaccel
+#    - vaapi
+#    - -hwaccel_device
+#    - /dev/dri/renderD128
+#    - -hwaccel_output_format
+#    - vaapi_moco
 ffmpeg:
-  hwaccel_args:
-    - -hwaccel
-    - vaapi
-    - -hwaccel_device
-    - /dev/dri/renderD128
-    - -hwaccel_output_format
-    - vaapi_moco
-
+  hwaccel_args: preset-vaapi
 
 record:
   enabled: false
