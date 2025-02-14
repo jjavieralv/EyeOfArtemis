@@ -17,6 +17,10 @@
       - [1.2.2.3. Advices](#1223-advices)
       - [1.2.2.4. Dependencies](#1224-dependencies)
       - [1.2.2.5. Tag tree](#1225-tag-tree)
+      - [1.2.2.6. Example how to use them](#1226-example-how-to-use-them)
+        - [1.2.2.6.1. Install](#12261-install)
+        - [1.2.2.6.2. Update config and restart](#12262-update-config-and-restart)
+        - [1.2.2.6.3. Delete everything](#12263-delete-everything)
   - [1.3. Bibliography](#13-bibliography)
   - [1.4. Author Information](#14-author-information)
 
@@ -90,6 +94,12 @@ Or if you are doing your things right with an python env created
 
 Tags to manage this role:
 
+- **mosquitto**: manage mosquito service infra
+  - **config**: set up mosquitto config
+  - **delete**: remove all mosquitto configs
+  - **up**: Start service
+  - **down**: Stop service
+  - **restart**: Restart service
 - **docker-compose**: install docker compose itself
   - **prepare-system**: first tag set up system to install later
   - **install**: install all necesary tools to run docker-compose
@@ -99,18 +109,38 @@ Tags to manage this role:
   - **up**: Start service
   - **down**: Stop service
   - **restart**: Restart service
-- **mosquitto**: manage mosquito service infra
-  - **config**: set up mosquitto config
-  - **delete**: remove all mosquitto configs
-  - **up**: Start service
-  - **down**: Stop service
-  - **restart**: Restart service
-- **NGINX**: manage mosquito service infra
+- **nginx**: manage NGINX service infra
   - **config**: set up NGINX config
   - **delete**: remove all NGINX configs
   - **up**: Start service
   - **down**: Stop service
   - **restart**: Restart service
+- **portainer**: manage portainer service infra
+  - **config**: set up portainer config
+  - **delete**: remove all portainer configs
+  - **up**: Start service
+  - **down**: Stop service
+  - **restart**: Restart service
+
+#### 1.2.2.6. Example how to use them
+
+##### 1.2.2.6.1. Install
+
+```bash
+ansible-playbook -i {your_inventory} docker-compose_management.yml -t portainer,config
+```
+
+##### 1.2.2.6.2. Update config and restart
+
+```bash
+ansible-playbook -i {your_inventory} docker-compose_management.yml -t portainer,config,restart
+```
+
+##### 1.2.2.6.3. Delete everything
+
+```bash
+ansible-playbook -i {your_inventory} docker-compose_management.yml -t portainer,delete
+```
 
 ## 1.3. Bibliography
 
@@ -118,6 +148,13 @@ Originally forked from <https://github.com/iMartzen/ansible-role-centos-docker-c
 
 Mosquitto pass gen from: <https://shantanoo-desai.github.io/posts/technology/mosquitto_ansible_passgen/>
 <https://industry40.systems/20>
+
+htpasswd generator command (grabbing just the pass):
+There is also a filter script loaded to be able to transform password to htpasswd called htpasswd_generator.py
+
+```bash
+docker run --rm httpd:2.4-alpine htpasswd -nbB admin 'superpassword' | cut -d ":" -f 2 | sed 's/\$/\$\$/g'
+```
 
 ## 1.4. Author Information
 

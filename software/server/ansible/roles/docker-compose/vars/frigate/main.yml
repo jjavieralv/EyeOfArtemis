@@ -1,7 +1,7 @@
 ## Docker Compose setting
 image:
   name: ghcr.io/blakeblackshear/frigate
-  version: "stable"
+  version: "0.15.0-beta7-rocm"
   pull_policy: always
 privileged: "true"
 restart: "unless-stopped"
@@ -11,11 +11,12 @@ container_name: frigate
 #Add all environment values you want to use in container
 environment_values:
   FRIGATE_RTSP_PASSWORD: "password"
-  LIBVA_DRIVER_NAME: i965
+  LIBVA_DRIVER_NAME: radeonsi
 
 ## Network
 ports:
-  - "5050:5000"
+  - 8000:5000
+  #- "5050:5000"
   - "8554:8554" # RTSP feeds
   - "8555:8555/tcp" # WebRTC over tcp
   - "8555:8555/udp" # WebRTC over udp

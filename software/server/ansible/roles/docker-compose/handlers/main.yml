@@ -22,6 +22,18 @@
     chdir: "{{ docker_compose.project.path }}"
   listen: "compose up"
 
+- name: Compose down delete
+  # become_user: "{{ dockercompose_user }}"
+  become: true
+  ansible.builtin.command:
+    argv:
+      - "docker"
+      - "compose"
+      - "down"
+      - "-v"
+    chdir: "{{ docker_compose.project.path }}"
+  listen: "compose down delete"
+
 # Some hwcel boards stops working when restart, thats why we do down and up
 
 - name: Compose restart

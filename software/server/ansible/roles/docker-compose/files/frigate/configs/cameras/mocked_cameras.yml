@@ -1,15 +1,16 @@
 mocked_camera_1:
   ffmpeg:
     inputs:
-      - path: rtsp://192.168.1.179:9000/mocked_stream1
-mocked_camera_2:
-  ffmpeg:
-    inputs:
-      - path: rtsp://192.168.1.179:9000/mocked_stream1
-mocked_camera_3:
-  ffmpeg:
-    inputs:
-      - path: rtsp://192.168.1.179:9000/mocked_stream1
+      - path: /config/mocked_videos/kids_in_class.mp4
+        input_args: -re -stream_loop -1 -fflags +genpts
+#mocked_camera_2:
+#  ffmpeg:
+#    inputs:
+#      - path: rtsp://192.168.1.179:9000/mocked_stream1
+#mocked_camera_3:
+#  ffmpeg:
+#    inputs:
+#      - path: rtsp://192.168.1.179:9000/mocked_stream1
 #mocked_camera_4:
 #  ffmpeg:
 #    inputs:

@@ -55,13 +55,13 @@ How to use the ansible technology to load the modules [here](./ansible/README.md
 1. Create a user called eyeofartemis. Use a strong credentials and store them
 
     ```shell
-    adduser eyeofartemis
+    sudo adduser eyeofartemis
     ```
 
 2. Add them sudo permissions
 
     ```shell
-    usermod -aG sudo eyeofartemis
+    sudo usermod -aG sudo eyeofartemis
     ```
 
 ##### Update
@@ -108,6 +108,7 @@ renderer: networkd
 #renderer: NetworkManager
 ethernets:
   {your_interface_name}:
+    dhcp4: no
     addresses:
       - {your_interface_ip}/{your_interface_mask}
     routes:
@@ -126,6 +127,7 @@ network:
   renderer: networkd
   ethernets:
     enp2s0:
+      dhcp4: no
       addresses:
         - 192.168.1.30/24
       routes:

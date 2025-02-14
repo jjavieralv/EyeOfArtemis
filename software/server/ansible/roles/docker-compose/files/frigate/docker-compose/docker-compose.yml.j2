@@ -11,15 +11,20 @@ services:
     {% endif %}
 
     devices:
- #     - /dev/bus/usb:/dev/bus/usb # passes the USB Coral, needs to be modified for other versions
-      - /dev/apex_0:/dev/apex_0 # passes a PCIe Coral, follow driver instructions here https://coral.ai/docs/m2/get-started/#2a-on-linux
-      - /dev/dri/renderD128 # for intel hwaccel, needs to be updated for your hardware
+      - /dev/dri
+      - /dev/kfd
+#      - /dev/bus/usb:/dev/bus/usb # passes the USB Coral, needs to be modified for other versions
+#      - /dev/apex_0:/dev/apex_0 # passes a PCIe Coral, follow driver instructions here https://coral.ai/docs/m2/get-started/#2a-on-linux
+#      - /dev/dri/renderD128 # for intel hwaccel, needs to be updated for your hardware
     volumes:
       - /etc/localtime:/etc/localtime:ro
       - type: bind
         source: {{ main_paths.config.path }}/{{ main_paths.config.filename }}
         target: /config/config.yml
       - {{ main_paths.media.path }}:/media/frigate
+      - type: bind
+        source: {{ main_paths.config.path }}/mocked_videos
+        target: /config/mocked_videos
       - type: {{ main_paths.cache.type }}
         target: {{ main_paths.cache.target }}
         tmpfs:

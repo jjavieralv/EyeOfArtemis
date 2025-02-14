@@ -26,6 +26,7 @@ continue pressing enter without setting any pass to be passwordless
 Copy the file ansible.pub(```shell echo $HOME/.ssh/ansible.pub``` ) to roles/server-management/files
 
 This will config the server ready to continue using certs authentication instead of password.
+You must be on software/server/ansible path to execute all the following ansible-playbooks
 
 ```shell
 ansible-playbook -i {your_inventory} -t first-execution,groups,users,config_sudoers,ssh_copy,ssh_config,energy -k --ask-become-pass server_management.yml
@@ -38,7 +39,7 @@ Now you can execute any other playbook
 Config and install docker-compose
 
 ```shell
-ansible-playbook -i inventories/test.yml -t docker-compose,prepare-system,install docker-compose_management.yml
+ansible-playbook -i {your_inventory} -t docker-compose,prepare-system,install docker-compose_management.yml
 ```
 
 ## 1.4. Install mosquitto
@@ -58,7 +59,7 @@ Or if you are doing your things right with an python env created
 Then, you are ready to install mosquitto
 
 ```shell
-ansible-playbook -i inventories/test.yml -t mosquitto,config,up docker-compose_management.yml
+ansible-playbook -i {your_inventory} -t mosquitto,config,up docker-compose_management.yml
 ```
 
 Now you should have mosquitto working
@@ -66,5 +67,5 @@ Now you should have mosquitto working
 ## 1.5. Install frigate
 
 ```shell
-ansible-playbook -i inventories/test.yml -t frigate,config,up docker-compose_management.yml
+ansible-playbook -i {your_inventory} -t frigate,config,up docker-compose_management.yml
 ```

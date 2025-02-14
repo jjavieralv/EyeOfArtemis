@@ -23,9 +23,9 @@
   block:
     - name: Docker compose frigate down
       ansible.builtin.debug:
-        msg: "Down frigate..."
+        msg: "Down frigate with delete..."
       changed_when: true
-      notify: "compose down"
+      notify: "compose down delete"
 
     - name: Flush handlers
       ansible.builtin.meta: flush_handlers
@@ -68,7 +68,16 @@
         mode: "0644"
         owner: "{{ dockercompose_user }}"
       with_community.general.filetree: "files/frigate/configs/"
-      when: item.state == 'file'
+      when: item.state == 'file' and item.path != 'mocked_videos/kids_in_class.mp4'
+
+    - name: Copy directory structure
+      ansible.builtin.copy:
+        src: "files/frigate/configs/{{ item }}"
+        dest: "{{ main_paths.config.path }}"
+        owner: "{{ dockercompose_user }}"
+        mode: "0744"
+      loop:
+        - "mocked_videos"
 
     - name: Copy frigate docker_compose template
       ansible.builtin.template:
