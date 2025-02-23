@@ -102,7 +102,7 @@ Tags to manage this role:
   - **restart**: Restart service
 - **docker-compose**: install docker compose itself
   - **prepare-system**: first tag set up system to install later
-  - **install**: install all necesary tools to run docker-compose
+  - **install**: install all necessary tools to run docker-compose
 - **frigate**: manage frigate service infra
   - **config**: set up frigate config
   - **delete**: remove all frigate configs
