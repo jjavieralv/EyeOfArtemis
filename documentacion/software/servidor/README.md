@@ -5,6 +5,8 @@
 - [Server software](#server-software)
   - [Index](#index)
   - [Ansible](#ansible)
+  - [Config SSH tunel](#config-ssh-tunel)
+  - [Ngrok](#ngrok)
   - [Install and config SO](#install-and-config-so)
     - [Ubuntu](#ubuntu)
       - [Create instalation device](#create-instalation-device)
@@ -30,6 +32,26 @@
 ## Ansible
 
 How to use the ansible technology to load the modules [here](./ansible/README.md)
+
+## Config SSH tunel
+
+```shell
+ssh -p tunel_port ansible@tunel_IP -L local_port:localhost:server_port -N
+```
+
+Example for SSH
+
+```shell
+ssh -p tunel_port ansible@tunel_IP -L 2200:localhost:22 -N
+```
+## Ngrok
+
+If you want to use ngrok to create a SSH tunnel to the server, you can use the following script:
+Add a file called apikey in the ngrok folder with the API key
+
+```shell
+bash ngrok/ngrok_create_connections.sh
+```
 
 ## Install and config SO
 

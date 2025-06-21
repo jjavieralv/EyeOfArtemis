@@ -10,6 +10,17 @@ services:
     pull_policy: {{ image.pull_policy }}
     {% endif %}
 
+    group_add:
+      - video
+    
+    cap_add:
+      - SYS_PTRACE
+
+    security_opt:
+      - seccomp=unconfined
+
+    ipc: host
+
     devices:
       - /dev/dri
       - /dev/kfd
@@ -25,6 +36,7 @@ services:
       - type: bind
         source: {{ main_paths.config.path }}/mocked_videos
         target: /config/mocked_videos
+      - {{ main_paths.config.path }}/miscellanea:/config/miscellanea
       - type: {{ main_paths.cache.type }}
         target: {{ main_paths.cache.target }}
         tmpfs:

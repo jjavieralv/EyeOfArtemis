@@ -1,0 +1,55 @@
+mqtt:
+  host: mosquitto
+  user: {{mosquitto.users[1].username}}
+  password: {{mosquitto.users[1].password}}
+  topic_prefix: frigate
+  port: {{mosquitto.listener}}
+
+#detectors:
+  #cpu1:
+  #  type: cpu
+  #coral:
+  #  type: edgetpu
+  #  device: pci:0
+
+#detect:
+#  enabled: false
+#  width: 640
+#  height: 352
+#  fps: 5
+
+
+# I had to install 
+# ``` sudo apt install i965-va-driver vainfo libva-glx2 libva-drm2 ffmpeg ```
+# ``` export LIBVA_DRIVER_NAME=i965 ```
+# check what can I use ```ffmpeg -hide_banner -hwaccels```
+# It could be different on other systems
+#
+#ffmpeg:
+#  hwaccel_args:
+#    - -hwaccel
+#    - vaapi
+#    - -hwaccel_device
+#    - /dev/dri/renderD128
+#    - -hwaccel_output_format
+#    - vaapi_moco
+ffmpeg:
+  hwaccel_args: preset-vaapi
+
+record:
+  enabled: false
+
+snapshots:
+  enabled: false
+
+birdseye:
+  enabled: true
+  mode: continuous
+
+
+cameras:
+{% for camera_file in lookup('fileglob', 'cameras/*.yml', wantlist=True) %}
+{% set camera_content = lookup('file', camera_file) %}
+  {{camera_content | indent(2) }}
+{% endfor %}
+

@@ -5,36 +5,34 @@ mqtt:
   topic_prefix: frigate
   port: {{mosquitto.listener}}
 
-#detectors:
-  #cpu1:
-  #  type: cpu
-  #coral:
-  #  type: edgetpu
-  #  device: pci:0
-
-#detect:
-#  enabled: false
-#  width: 640
-#  height: 352
-#  fps: 5
-
-
-# I had to install 
-# ``` sudo apt install i965-va-driver vainfo libva-glx2 libva-drm2 ffmpeg ```
-# ``` export LIBVA_DRIVER_NAME=i965 ```
-# check what can I use ```ffmpeg -hide_banner -hwaccels```
-# It could be different on other systems
-#
 #ffmpeg:
 #  hwaccel_args:
 #    - -hwaccel
-#    - vaapi
+#    - rocm
 #    - -hwaccel_device
 #    - /dev/dri/renderD128
-#    - -hwaccel_output_format
-#    - vaapi_moco
-ffmpeg:
-  hwaccel_args: preset-vaapi
+#  input_args:
+#    - -avoid_negative_ts
+#    - make_zero
+#    - -fflags
+#    - +genpts+discardcorrupt
+#    - -rtsp_transport
+#    - tcp
+#    - -stimeout
+#    - '5000000'
+#    - -use_wallclock_as_timestamps
+#    - '1'
+
+detectors:
+  amd:
+    type: rocm
+    device: /dev/dri/renderD128  # Match your GPU device
+
+model:
+  path: /config/miscellanea/yolov7-tiny.onnx  # Must exist in config directory
+  #width: 320
+  #height: 320
+  labelmap_path: /config/miscellanea/labels.txt
 
 record:
   enabled: false
@@ -45,6 +43,12 @@ snapshots:
 birdseye:
   enabled: true
   mode: continuous
+
+#objects:
+#  track:
+#    - person
+#    - cat
+#    - dog
 
 
 cameras:

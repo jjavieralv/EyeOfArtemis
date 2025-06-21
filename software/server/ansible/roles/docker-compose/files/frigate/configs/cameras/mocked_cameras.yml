@@ -1,8 +1,31 @@
 mocked_camera_1:
   ffmpeg:
     inputs:
-      - path: /config/mocked_videos/kids_in_class.mp4
+      - path: file:///config/mocked_videos/oldpeople_960x540_ref.mp4
+        #input_args:
+        #  - -re
+        #  - -fflags +genpts+discardcorrupt
+        #  - -vsync cfr
+        #  - -hwaccel auto
+
         input_args: -re -stream_loop -1 -fflags +genpts
+#        roles:
+#          - detect
+#
+#  detect:
+#    enabled: true
+#    width: 640
+#    height: 360
+#    fps: 5
+#
+#  rtmp:
+#    enabled: false
+#  snapshots:
+#    enabled: false
+#    timestamp: true
+#    bounding_box: true
+#  record:
+#    enabled: false
 #mocked_camera_2:
 #  ffmpeg:
 #    inputs:
