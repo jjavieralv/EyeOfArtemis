@@ -1,14 +1,13 @@
 ## Docker compose settings
 image:
   name: docker.io/eclipse-mosquitto
-  version: 2.0.15
   pull_policy: always
-container_name: broker_test
+container_name: mosquitto
 restart: unless-stopped
 
 configs:
-  mosquitto_users: /mosquitto_users
-  mosquitto_config: /mosquitto_config
+  mosquitto_users: /mosquitto/config/mosquitto_users
+  mosquitto_config: /mosquitto.config
 
 entrypoint: "mosquitto -c {{ configs.mosquitto_config }}"
 

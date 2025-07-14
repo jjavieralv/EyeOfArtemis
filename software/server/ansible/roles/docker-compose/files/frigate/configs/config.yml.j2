@@ -1,3 +1,4 @@
+version: 0.15-1
 mqtt:
   host: mosquitto
   user: {{mosquitto.users[1].username}}
@@ -5,34 +6,32 @@ mqtt:
   topic_prefix: frigate
   port: {{mosquitto.listener}}
 
+#model:
+#  # Use OpenVINO model for AMD GPU acceleration
+#  path: /openvino-model/ssdlite_mobilenet_v2.xml
+#  input_tensor: nhwc
+#  input_pixel_format: bgr
+#  width: 320
+#  height: 320
+#  labelmap_path: /openvino-model/coco_91cl_bkgr.txt
+#
+#detectors:
+#  ov:
+#    type: openvino
+#    device: GPU  # Use GPU for AMD Radeon detection
+#    model:
+#      path: /openvino-model/ssdlite_mobilenet_v2.xml
 #ffmpeg:
-#  hwaccel_args:
-#    - -hwaccel
-#    - rocm
-#    - -hwaccel_device
-#    - /dev/dri/renderD128
-#  input_args:
-#    - -avoid_negative_ts
-#    - make_zero
-#    - -fflags
-#    - +genpts+discardcorrupt
-#    - -rtsp_transport
-#    - tcp
-#    - -stimeout
-#    - '5000000'
-#    - -use_wallclock_as_timestamps
-#    - '1'
+#  hwaccel_args: preset-vaapi
+#
+#detectors:
+#  ov:
+#    type: openvino
+#    device: AUTO
 
-detectors:
-  amd:
-    type: rocm
-    device: /dev/dri/renderD128  # Match your GPU device
-
-model:
-  path: /config/miscellanea/yolov7-tiny.onnx  # Must exist in config directory
-  #width: 320
-  #height: 320
-  labelmap_path: /config/miscellanea/labels.txt
+objects:
+  track:
+    - person
 
 record:
   enabled: false
@@ -44,16 +43,40 @@ birdseye:
   enabled: true
   mode: continuous
 
-#objects:
-#  track:
-#    - person
-#    - cat
-#    - dog
+cameras:
+  local_video:
+    ffmpeg:
+      inputs:
+        - path: file:///config/mocked_videos/oldpeople_960x540_ref.mp4
+          input_args: -re -stream_loop -1
+          roles:
+            - detect
+            - record
+    detect:
+      enabled: true
+      width: 1280
+      height: 720
+      fps: 5
+    objects:
+      track:
+        - person
 
+    zones:
+      people_banco:
+        coordinates: 0.636,0.274,0.616,0.938,0.974,0.95,0.972,0.235
+        loitering_time: 0
+        objects: person
+    motion:
+      mask: 0.635,0.253,0.616,0.976,0.973,0.974,0.97,0.208
+      threshold: 44
+      contour_area: 75
+      improve_contrast: true
 
+{#
 cameras:
 {% for camera_file in lookup('fileglob', 'cameras/*.yml', wantlist=True) %}
 {% set camera_content = lookup('file', camera_file) %}
   {{camera_content | indent(2) }}
 {% endfor %}
+#}
 

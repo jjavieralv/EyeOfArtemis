@@ -6,7 +6,7 @@
   - [Index](#index)
   - [Ansible](#ansible)
   - [Config SSH tunel](#config-ssh-tunel)
-  - [Ngrok](#ngrok)
+    - [Ngrok](#ngrok)
   - [Install and config SO](#install-and-config-so)
     - [Ubuntu](#ubuntu)
       - [Create instalation device](#create-instalation-device)
@@ -28,6 +28,9 @@
     - [FFMPEG](#ffmpeg)
       - [Description](#description)
       - [How to use](#how-to-use)
+  - [Rocm installation](#rocm-installation)
+    - [Description](#description-1)
+    - [What to install](#what-to-install)
 
 ## Ansible
 
@@ -44,13 +47,14 @@ Example for SSH
 ```shell
 ssh -p tunel_port ansible@tunel_IP -L 2200:localhost:22 -N
 ```
-## Ngrok
+
+### Ngrok
 
 If you want to use ngrok to create a SSH tunnel to the server, you can use the following script:
 Add a file called apikey in the ngrok folder with the API key
 
 ```shell
-bash ngrok/ngrok_create_connections.sh
+bash software/server/ngrok/ngrok_create_connections.sh
 ```
 
 ## Install and config SO
@@ -322,3 +326,45 @@ Is the system that will enable hardware acceleration on video in order to improv
   ``` shell
   ffmpeg -hwaccels
   ```
+
+## Rocm installation
+
+### Description
+
+Is the system that will enable hardware acceleration on video in order to improve the usage and free CPU
+
+### What to install
+
+I'm going to try to explain how to install rocm in a clean ubuntu server, but I had to use TONS of workarounds
+
+```shell
+# Install radeontop to test if the gpu is working
+sudo apt install radeontop
+# Also this is to test if is installed correctly
+dkms status
+#This will show an empty result, so lets try to install rocm
+
+#Install rocm
+# The official page suggest you to use this
+https://rocm.docs.amd.com/projects/install-on-linux/en/latest/install/quick-start.html#rocm-install-quick
+
+#But this had problems when I tried to install it
+#So you can try to install it using this http://youtube.com/watch?v=KMOQy6jxzpg
+#If this is not working, try install the packages manually
+sudo apt install "linux-headers-$(uname -r)" "linux-modules-extra-$(uname -r)"
+echo "deb [arch=amd64] https://repo.radeon.com/rocm/apt/latest/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/rocm.list
+sudo apt update
+sudo apt install rocm #this will be heavy (>20GB)
+echo "deb [arch=amd64] https://repo.radeon.com/amdgpu/latest/ubuntu noble main" | sudo tee /etc/apt/sources.list.d/amdgpu.list
+sudo apt install amdgpu-dkms amdgpu-install #This will install the amdgpu-dkms and
+
+#check that rocm is installed correctly
+sudo rocminfo |more
+
+#to test if the container is working
+sudo docker run -it --device=/dev/kfd --device=/dev/dri --security-opt seccomp=unconfined --group-add video rocm/rocm-terminal
+
+#if not, try to add the groups video and render to the user. 
+#Also check if it has an itegrated graphics card to disable it or you have several cards
+
+```

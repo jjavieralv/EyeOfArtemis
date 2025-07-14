@@ -11,10 +11,10 @@
   tags: always
 
 ####################
-# Config Mosquitto #
+# Config mosquitto #
 ####################
 
-- name: Delete Mosquitto
+- name: Delete mosquitto
   tags: delete
   block:
     - name: Docker compose mosquitto down
@@ -62,7 +62,7 @@
       loop: "{{ lookup('ansible.builtin.fileglob', 'mosquitto/configs/*', wantlist=True) }}"
 
 ####################
-# Manage Mosquitto #
+# Manage mosquitto #
 ####################
 
 - name: Docker compose mosquitto up

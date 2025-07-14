@@ -10,10 +10,11 @@ container_name: frigate
 ## Environment
 #Add all environment values you want to use in container
 environment_values:
-  FRIGATE_RTSP_PASSWORD: "password"
-  LIBVA_DRIVER_NAME: radeonsi
-  HIP_LAUNCH_BLOCKING: 1
+  #  FRIGATE_RTSP_PASSWORD: "password"
+  #  LIBVA_DRIVER_NAME: radeonsi
+  #  HIP_LAUNCH_BLOCKING: 1
   HSA_OVERRIDE_GFX_VERSION: 10.3.0
+  ROC_ENABLE_PRE_VEGA: 1
 
 ## Network
 ports:

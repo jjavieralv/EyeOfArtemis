@@ -39,7 +39,7 @@ function create_ssh_tunnel(){
   for tunnel in "${active_tunnels[@]}"; do
     declare -n array="$tunnel"
     echo -e "\n\033[32mStarting service '$tunnel' remote port: ${array[0]} redirected to local port: ${array[1]}\033[0m"
-    ssh -p $PORT ansible@$IP -L ${array[1]}:localhost:${array[0]} -N & 
+    ssh -o StrictHostKeyChecking=no -p $PORT ansible@$IP -L ${array[1]}:localhost:${array[0]} -N & 
     pids+=($!)
   done
 }
