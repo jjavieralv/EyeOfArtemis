@@ -1,0 +1,136 @@
+{
+"zone":[
+  {
+  "id": "zone_0000001",
+  "name": null,
+  "description": null
+  }
+],
+  
+"zone_group":[
+  {
+  "id": "zone_groups_0000001",
+  "name": null,
+  "description": null,
+  "zones_id": [
+    "zones_0000001"
+  ]
+  }
+],
+  
+"user":[
+  {
+  "id": "user_0000001",
+  "alias": null,
+  "name": null,
+  "email": null,
+  "phone": null,
+  "credentials_id": "credential_0000001"
+  }
+],
+  
+"groups":[
+  {
+  "id": "groups_0000001",
+  "alias": null,
+  "name": null,
+  "user_id": [
+    "0"
+  ]
+  }
+],
+  
+"permissions_user_zone":[
+  {
+  "id": null,
+  "user_id": "user_0000001",
+  "zone_id": "zone_0000001",
+  "enabled": true
+  }
+],
+  
+"permissions_user_zone_groups":[
+  {
+  "id": null,
+  "user_id": "user_0000001",
+  "zone_group_id": "zone_groups_0000001",
+  "enabled": true
+  }
+],
+  
+"permissions_group":[
+  {
+  "id": null,
+  "group_id": "groups_0000001",
+  "zone_id": "zone_0000001",
+  "enabled": true
+  }
+],
+  
+"permissions_group_zone_groups":[
+  {
+  "id": null,
+  "group_id": "groups_0000001",
+  "zone_group_id": "zone_groups_0000001",
+  "enabled": null
+  }
+],
+  
+"credentials_id":[
+  {
+  "id": "credential_0000001",
+  "facial_id": "facial_0000001",
+  "rfidcard_id": "rfidcards_0000001",
+  "fingerprint_id": "fingerprint_0000001",
+  "password_id": "password_0000001"
+  }
+],
+  
+"facial":[
+  {
+  "id": "facial_0000001",
+  "type": null,
+  "name": null,
+  "description": null,
+  "db_name_id": null
+  }
+],
+  
+"fingerprint":[
+  {
+  "id": "fingerprint_0000001",
+  "type": null,
+  "name": null,
+  "description": null,
+  "db_name_id": null
+  }
+],
+  
+"password":[
+  {
+  "id": "password_0000001",
+  "type": null,
+  "name": null,
+  "description": null,
+  "value_sha256": null
+  }
+],
+  
+"rfidcard":[
+  {
+  "id": "rfidcards_0000001",
+  "rfid_sha256": null
+  }
+],
+  
+"device":[
+  {
+  "id": "device_0000001",
+  "name": null,
+  "description": null,
+  "enabled": null,
+  "type": null,
+  "zone_assigned": "zone_0000001"
+  }
+]
+}
